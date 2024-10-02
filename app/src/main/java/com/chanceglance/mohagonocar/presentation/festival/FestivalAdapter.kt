@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.chanceglance.mohagonocar.databinding.ItemFestivalBinding
 
-class FestivalAdapter:RecyclerView.Adapter<FestivalAdapter.FestivalViewHolder>() {
+class FestivalAdapter(private val onItemClicked: (String) -> Unit):RecyclerView.Adapter<FestivalAdapter.FestivalViewHolder>() {
     private val festivalList:List<String> = listOf("구수민", "경기대학교", "전민주", "노태윤", "김송은",
     "김상후","구수민", "경기대학교", "전민주", "노태윤", "김송은", "김상후",)
     inner class FestivalViewHolder(
@@ -14,6 +14,9 @@ class FestivalAdapter:RecyclerView.Adapter<FestivalAdapter.FestivalViewHolder>()
 
         fun onBind(item:String){
             binding.tvName.text=item
+            binding.root.setOnClickListener {
+                onItemClicked(item) // 아이템 클릭 시 콜백 호출
+            }
         }
     }
 

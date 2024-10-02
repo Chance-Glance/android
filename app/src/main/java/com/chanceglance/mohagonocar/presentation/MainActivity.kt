@@ -1,5 +1,6 @@
 package com.chanceglance.mohagonocar.presentation
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         with(binding){
             btnFestival.isSelected=true
             btnTravel.isSelected=false
+            btnFestival.setTextColor(Color.WHITE)
 
             btnFestival.setOnClickListener{
                 clickFestivalButton()
@@ -36,15 +38,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clickFestivalButton(){
-        binding.btnFestival.isSelected=true
-        binding.btnTravel.isSelected=false
+        with(binding){
+            btnFestival.isSelected=true
+            btnTravel.isSelected=false
+            btnFestival.setTextColor(Color.WHITE)
+            btnTravel.setTextColor(Color.BLACK)
+        }
 
         replaceFragment(FestivalFragment())
     }
 
     private fun clickTravelButton(){
-        binding.btnFestival.isSelected=false
-        binding.btnTravel.isSelected=true
+        with(binding){
+            btnFestival.isSelected=false
+            btnTravel.isSelected=true
+            btnFestival.setTextColor(Color.BLACK)
+            btnTravel.setTextColor(Color.WHITE)
+        }
     }
 
     private fun replaceFragment(fragment: Fragment){
