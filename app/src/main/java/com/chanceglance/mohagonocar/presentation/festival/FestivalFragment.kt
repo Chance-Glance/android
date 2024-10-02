@@ -1,5 +1,6 @@
 package com.chanceglance.mohagonocar.presentation.festival
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,7 +31,10 @@ class FestivalFragment: Fragment() {
     }
 
     private fun getFestivalList(){
-        festivalAdapter= FestivalAdapter()
+        festivalAdapter= FestivalAdapter{item ->
+        val intent = Intent(requireContext(), FestivalDetailActivity::class.java)
+        intent.putExtra("festivalName", item) // 클릭된 아이템 정보 전달
+        startActivity(intent)}
         binding.rvFestivals.adapter=festivalAdapter
     }
 
