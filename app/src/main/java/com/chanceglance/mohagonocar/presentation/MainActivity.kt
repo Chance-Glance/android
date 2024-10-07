@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setting(){
+        replaceFragment(FestivalFragment())
         with(binding){
             btnFestival.isSelected=true
             btnTravel.isSelected=false

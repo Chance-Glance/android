@@ -4,4 +4,10 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="festival_blue">#27374D</color>
+
+    <color name="plan_background_grey">#F6F5F2</color>
+    <color name="plan_text_grey">#A9A9A9</color>
+    <color name="plan_btn_purple">#A594F9</color>
+    <color name="plan_error_red">#E4003A</color>
+    <color name="plan_btn_grey">#B7B7B7</color>
 </resources>
