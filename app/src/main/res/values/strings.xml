@@ -8,4 +8,11 @@
     <string name="festival_date">2024.00.00 ~ 2024.00.00</string>
     <string name="festival_location">축제 위치</string>
 
+    <string name="plan_itinerary">여행일정 등록</string>
+    <string name="plan_festival_schedule">지역 축제 일정</string>
+    <string name="plan_submit">%d.%d.%s / 여행 등록</string>
+    <string name="plan_error">축제 일정을 포함해주세요!</string>
+
+    <string name="plan_departure_arrival">출발 도착 지정</string>
+
 </resources>

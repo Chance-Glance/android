@@ -27,6 +27,10 @@
         <activity android:name=".presentation.festival.FestivalDetailActivity"
             android:exported="false">
         </activity>
+
+        <activity android:name=".presentation.festival.plan.PlanActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>
