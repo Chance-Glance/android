@@ -3,8 +3,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-parcelize")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
-    //id("kotlin-kapt")
-    //id("com.google.dagger.hilt.android") version "2.51"
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android") version "2.51"
 }
 
 android {
@@ -76,20 +76,23 @@ dependencies {
     implementation("io.coil-kt:coil:2.4.0")
 
     //hilt
-   /* implementation("com.google.dagger:hilt-android:2.46.1")
+    implementation("com.google.dagger:hilt-android:2.46.1")
     kapt("com.google.dagger:hilt-android-compiler:2.46.1")
-    kapt("com.google.dagger:dagger-android-processor:2.46.1")*/
+    kapt("com.google.dagger:dagger-android-processor:2.46.1")
 
     // timber
     implementation("com.jakewharton.timber:timber:4.7.1")
-    //kapt("com.github.bumptech.glide:compiler:4.11.0")
+    kapt("com.github.bumptech.glide:compiler:4.11.0")
+
+    //glide
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    kapt("com.github.bumptech.glide:compiler:4.12.0")
 }
 
-/*
 kapt {
     correctErrorTypes = true
 }
 
 hilt {
     enableAggregatingTask = false
-}*/
+}

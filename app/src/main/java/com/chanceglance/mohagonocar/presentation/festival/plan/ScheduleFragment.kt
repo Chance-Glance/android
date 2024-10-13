@@ -111,6 +111,7 @@ class ScheduleFragment:Fragment() {
         val days = generateDaysForMonth(currentYear, currentMonth)
         val adapter = CalendarAdapter(days, festivalDates) { selectedDay ->
             //Toast.makeText(this, "$selectedDay 선택됨", Toast.LENGTH_SHORT).show()
+            planViewModel.getDate(currentYear, currentMonth, selectedDay)
             if(festivalDates.contains(selectedDay)){
                 this.selectedDay=selectedDay
                 binding.btnSubmit.text = getString(R.string.plan_submit, currentYear, currentMonth, selectedDay)

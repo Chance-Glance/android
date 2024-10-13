@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.databinding.ActivityPlanBinding
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class PlanActivity:AppCompatActivity() {
     private lateinit var binding:ActivityPlanBinding
@@ -41,6 +43,15 @@ class PlanActivity:AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             handleBackPressed()
         }
+
+        // ViewModel 데이터 관찰
+        planViewModel.selectedDate.observe(this) { date ->
+            val (year, month, day) = date
+            // SimpleDateFormat을 사용하여 날짜 포맷 설정 (e.g., "11 Aug")
+            val formattedDate = formatDateToDayMonth(year, month, day)
+            binding.btnStart.text = formattedDate
+            binding.btnEnd.text = formattedDate
+        }
     }
 
     fun replaceFragment(fragment: Fragment, tag: String){
@@ -62,6 +73,19 @@ class PlanActivity:AppCompatActivity() {
 
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    // 날짜를 "dd MMM" 형식으로 변환하는 함수
+    private fun formatDateToDayMonth(year: Int, month: Int, day: Int): String {
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month)
+            set(Calendar.DAY_OF_MONTH, day)
+        }
+
+        // "dd MMM" 형식으로 포맷, 예: "11 Aug"
+        val dateFormat = SimpleDateFormat("dd MMM", Locale.ENGLISH)
+        return dateFormat.format(calendar.time)
     }
 
     // 뒤로가기 버튼 눌렀을 때의 처리
