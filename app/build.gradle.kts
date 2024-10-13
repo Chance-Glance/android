@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -19,6 +21,24 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            gradleLocalProperties(rootDir, providers).getProperty("base.url")
+        )
+
+        buildConfigField(
+            "String",
+            "KAKAO_MAP_URL",
+            gradleLocalProperties(rootDir,providers).getProperty("kakao.map.url")
+        )
+
+        buildConfigField(
+            "String",
+            "NATIVE_APP_KEY",
+            gradleLocalProperties(rootDir, providers).getProperty("kakao.native.app.key")
+        )
     }
 
     buildTypes {
@@ -87,6 +107,9 @@ dependencies {
     //glide
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     kapt("com.github.bumptech.glide:compiler:4.12.0")
+
+    //kakao map
+    implementation ("com.kakao.maps.open:android:2.11.9")
 }
 
 kapt {
