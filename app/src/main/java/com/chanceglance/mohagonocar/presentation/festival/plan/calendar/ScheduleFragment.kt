@@ -1,4 +1,4 @@
-package com.chanceglance.mohagonocar.presentation.festival.plan
+package com.chanceglance.mohagonocar.presentation.festival.plan.calendar
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,28 +10,32 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chanceglance.mohagonocar.R
+import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.FragmentScheduleBinding
+import com.chanceglance.mohagonocar.presentation.festival.plan.PlaceFragment
+import com.chanceglance.mohagonocar.presentation.festival.plan.PlanActivity
+import com.chanceglance.mohagonocar.presentation.festival.plan.PlanViewModel
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import java.util.Calendar
 
-class ScheduleFragment:Fragment() {
-    private var _binding: FragmentScheduleBinding?= null
+class ScheduleFragment : Fragment() {
+    private var _binding: FragmentScheduleBinding? = null
     private val binding: FragmentScheduleBinding
-        get()= requireNotNull(_binding) {"null"}
+        get() = requireNotNull(_binding) { "null" }
 
-    private val planViewModel:PlanViewModel by activityViewModels()
+    private val planViewModel: PlanViewModel by activityViewModels()
 
     private var currentMonth = Calendar.getInstance().get(Calendar.MONTH)
     private var currentYear = Calendar.getInstance().get(Calendar.YEAR)
-    private lateinit var selectedDay:String
-    private val festivalMonth = Calendar.OCTOBER  // 축제의 달
-    private val festivalYear = 2024  // 축제의 연도
+    private lateinit var selectedDay: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding= FragmentScheduleBinding.inflate(inflater,container,false)
+        _binding = FragmentScheduleBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -40,9 +44,12 @@ class ScheduleFragment:Fragment() {
         setting()
     }
 
-    private fun setting(){
+    private fun setting() {
+        val itemJsonString = arguments?.getString("festivalItem")
+        val festivalItem = itemJsonString?.let { Json.decodeFromString<ResponseFestivalDto.Data.Item>(it) }!!
+
         // 초기 달력 설정
-        updateCalendarView()
+        updateCalendarView(festivalItem.activePeriod)
 
         // Prev 버튼 클릭
         binding.btnPrev.setOnClickListener {
@@ -51,7 +58,9 @@ class ScheduleFragment:Fragment() {
                 currentMonth = 11
                 currentYear--
             }
-            updateCalendarView()
+            updateCalendarView(festivalItem.activePeriod)
+            binding.btnPrev.visibility=View.INVISIBLE
+            binding.btnNext.visibility=View.VISIBLE
         }
 
         // Next 버튼 클릭
@@ -61,11 +70,13 @@ class ScheduleFragment:Fragment() {
                 currentMonth = 0
                 currentYear++
             }
-            updateCalendarView()
+            updateCalendarView(festivalItem.activePeriod)
+            binding.btnPrev.visibility=View.VISIBLE
+            binding.btnNext.visibility=View.INVISIBLE
         }
 
-        binding.btnSubmit.setOnClickListener{
-            if(binding.btnSubmit.isSelected){
+        binding.btnSubmit.setOnClickListener {
+            if (binding.btnSubmit.isSelected) {
                 planViewModel.getDate(currentYear, currentMonth, selectedDay)
                 if (binding.btnSubmit.isSelected) {
                     (activity as PlanActivity).replaceFragment(PlaceFragment(), "PlaceFragment")
@@ -77,57 +88,49 @@ class ScheduleFragment:Fragment() {
         }
     }
 
-    private fun updateCalendarView() {
+    private fun updateCalendarView(activePeriod: ResponseFestivalDto.Data.Item.ActivePeriod) {
         val tvYearMonth = binding.tvYearMonth
-        val btnPrev = binding.btnPrev
-        val btnNext = binding.btnNext
         val recyclerView = binding.rvCalendar
+
+        val festivalStartMonth = activePeriod.startDate.monthValue - 1 // 0-based month
+        val festivalEndMonth = activePeriod.endDate.monthValue - 1
 
         // 년/월 업데이트
         tvYearMonth.text = "${currentYear}년 ${currentMonth + 1}월"
 
-        // 축제 달에서는 Prev 버튼 숨기기
-        if (currentYear == festivalYear && currentMonth == festivalMonth) {
-            btnPrev.visibility = View.INVISIBLE
-        } else {
-            btnPrev.visibility = View.VISIBLE
-        }
-
-        // 다음 달을 눌렀을 때 Next 버튼을 숨기기 (원하는 조건에 따라 조정)
-        if (currentMonth == (festivalMonth + 1) % 12 && currentYear == festivalYear) {
-            btnNext.visibility = View.INVISIBLE
-        } else {
-            btnNext.visibility = View.VISIBLE
-        }
-
         // 축제 달이면 축제 날짜를 적용
-        val festivalDates = if (currentYear == festivalYear && currentMonth == festivalMonth) {
-            listOf("17", "18", "19", "20") // 축제 날짜 리스트
-        } else {
-            emptyList() // 축제 달이 아닐 경우 빈 리스트
+        val startDay = if (currentMonth == festivalStartMonth) activePeriod.startDate.dayOfMonth else 1
+        val endDay = if (currentMonth == festivalEndMonth) activePeriod.endDate.dayOfMonth else {
+            generateDaysForMonth(currentYear, currentMonth).size
         }
+
+        val festivalDates = (startDay..endDay).map { it.toString() }
 
         // 달력 업데이트 (현재 달의 날짜 데이터 생성)
         val days = generateDaysForMonth(currentYear, currentMonth)
         val adapter = CalendarAdapter(days, festivalDates) { selectedDay ->
-            //Toast.makeText(this, "$selectedDay 선택됨", Toast.LENGTH_SHORT).show()
             planViewModel.getDate(currentYear, currentMonth, selectedDay)
-            if(festivalDates.contains(selectedDay)){
-                this.selectedDay=selectedDay
-                binding.btnSubmit.text = getString(R.string.plan_submit, currentYear, currentMonth, selectedDay)
-                binding.btnSubmit.setTextColor(getColor(requireContext(),R.color.white))
-                binding.btnSubmit.isSelected=true
-            }
-            else {
-                binding.btnSubmit.text = getString(R.string.plan_error)
-                binding.btnSubmit.setTextColor(getColor(requireContext(),R.color.plan_error_red))
-                binding.btnSubmit.isSelected=false
+            if (festivalDates.contains(selectedDay)) {
+                this.selectedDay = selectedDay
+                with(binding){
+                    btnSubmit.text =
+                        getString(R.string.plan_submit, currentYear, currentMonth+1, selectedDay)
+                    btnSubmit.setTextColor(getColor(requireContext(), R.color.white))
+                    btnSubmit.isSelected = true
+                }
+            } else {
+                with(binding){
+                    btnSubmit.text = getString(R.string.plan_error)
+                    btnSubmit.setTextColor(getColor(requireContext(), R.color.plan_error_red))
+                    btnSubmit.isSelected = false
+                }
             }
         }
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 7)
         recyclerView.adapter = adapter
     }
+
 
 
     fun generateDaysForMonth(year: Int, month: Int): List<String> {

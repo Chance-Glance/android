@@ -3,7 +3,6 @@ package com.chanceglance.mohagonocar.presentation.festival
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.PagerAdapter
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.ActivityFestivalDetailBinding
@@ -38,7 +37,7 @@ class FestivalDetailActivity : AppCompatActivity() {
         binding.tlDots.setupWithViewPager(binding.vpImages, true)
 
         clickBackButton()
-        clickPlanButton()
+        clickPlanButton(itemJsonString)
 
         val fragment = FestivalDetailFragment().apply {
             arguments = Bundle().apply {
@@ -58,9 +57,10 @@ class FestivalDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun clickPlanButton() {
+    private fun clickPlanButton(itemJsonString: String) {
         binding.btnPlan.setOnClickListener {
             val intent = Intent(this, PlanActivity::class.java)
+            intent.putExtra("festival",itemJsonString)
             startActivity(intent)
         }
     }

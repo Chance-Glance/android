@@ -43,6 +43,7 @@
         android:layout_marginEnd="5dp"
         android:background="@drawable/btn_month_next"
         android:rotation="180"
+        android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@id/tv_year_month"
         app:layout_constraintEnd_toStartOf="@id/tv_year_month"
         app:layout_constraintBottom_toBottomOf="@id/tv_year_month"/>
