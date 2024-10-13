@@ -1,16 +1,16 @@
 package com.chanceglance.mohagonocar.presentation.festival.plan
 
-import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import com.chanceglance.mohagonocar.R
+import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.ActivityPlanBinding
+import com.chanceglance.mohagonocar.presentation.festival.FestivalDetailFragment
+import com.chanceglance.mohagonocar.presentation.festival.plan.calendar.ScheduleFragment
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -33,9 +33,21 @@ class PlanActivity:AppCompatActivity() {
     }
 
     private fun setting(){
+        val itemJsonString = intent.getStringExtra("festival")
+        val item = itemJsonString?.let { Json.decodeFromString<ResponseFestivalDto.Data.Item>(it) }
+
+        binding.tvName.text=item!!.name
+        binding.tvLocation.text=item!!.address
+
+        val scheduleFragment = ScheduleFragment().apply {
+            arguments = Bundle().apply {
+                putString("festivalItem", itemJsonString) // item을 JSON 형태로 전달
+            }
+        }
+
         if (supportFragmentManager.findFragmentByTag("ScheduleFragment") == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.fcv_plan, ScheduleFragment(), "ScheduleFragment")
+                .add(R.id.fcv_plan, scheduleFragment, "ScheduleFragment")
                 .commit()
         }
 

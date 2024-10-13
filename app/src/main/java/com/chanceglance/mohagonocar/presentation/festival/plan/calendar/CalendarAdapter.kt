@@ -1,4 +1,4 @@
-package com.chanceglance.mohagonocar.presentation.festival.plan
+package com.chanceglance.mohagonocar.presentation.festival.plan.calendar
 
 import android.view.LayoutInflater
 import android.view.View
