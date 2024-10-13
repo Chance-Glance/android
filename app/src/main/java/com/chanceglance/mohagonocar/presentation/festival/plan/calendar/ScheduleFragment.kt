@@ -89,6 +89,7 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun updateCalendarView(activePeriod: ResponseFestivalDto.Data.Item.ActivePeriod) {
+        binding.tvFestivalSchedule.text=getString(R.string.festival_duration,activePeriod.startDate,activePeriod.endDate)
         val tvYearMonth = binding.tvYearMonth
         val recyclerView = binding.rvCalendar
 
