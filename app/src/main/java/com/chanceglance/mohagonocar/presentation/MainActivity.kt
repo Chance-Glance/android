@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.databinding.ActivityMainBinding
 import com.chanceglance.mohagonocar.presentation.festival.FestivalFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
@@ -63,6 +65,5 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fcv_main, fragment)
 //            .addToBackStack(null)
             .commit()
-
     }
 }

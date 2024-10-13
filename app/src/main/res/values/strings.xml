@@ -6,6 +6,7 @@
 
     <string name="festival_name">축제명</string>
     <string name="festival_date">2024.00.00 ~ 2024.00.00</string>
+    <string name="festival_duration">%s ~ %s</string>
     <string name="festival_location">축제 위치</string>
 
     <string name="plan_itinerary">여행일정 등록</string>
