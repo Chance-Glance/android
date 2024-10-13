@@ -1,10 +1,10 @@
-package com.chanceglance.mohagonocar.presentation.festival.plan
+package com.chanceglance.mohagonocar.presentation.festival.plan.time
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class PlaceViewModel:ViewModel() {
+class TimeViewModel:ViewModel() {
     private val _decideDepart = MutableLiveData<Boolean>() // 년, 월, 일 데이터를 저장
     private val _decideArrival = MutableLiveData<Boolean>()
 
