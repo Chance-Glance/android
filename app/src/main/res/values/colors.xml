@@ -10,4 +10,6 @@
     <color name="plan_btn_purple">#A594F9</color>
     <color name="plan_error_red">#E4003A</color>
     <color name="plan_btn_grey">#B7B7B7</color>
+
+    <color name="time_no_grey">#9BA4B5</color>
 </resources>

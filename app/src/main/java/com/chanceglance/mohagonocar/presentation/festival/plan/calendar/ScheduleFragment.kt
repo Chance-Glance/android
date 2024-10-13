@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.FragmentScheduleBinding
-import com.chanceglance.mohagonocar.presentation.festival.plan.PlaceFragment
+import com.chanceglance.mohagonocar.presentation.festival.plan.time.TimeFragment
 import com.chanceglance.mohagonocar.presentation.festival.plan.PlanActivity
 import com.chanceglance.mohagonocar.presentation.festival.plan.PlanViewModel
 import kotlinx.serialization.decodeFromString
@@ -79,7 +79,7 @@ class ScheduleFragment : Fragment() {
             if (binding.btnSubmit.isSelected) {
                 planViewModel.getDate(currentYear, currentMonth, selectedDay)
                 if (binding.btnSubmit.isSelected) {
-                    (activity as PlanActivity).replaceFragment(PlaceFragment(), "PlaceFragment")
+                    (activity as PlanActivity).replaceFragment(TimeFragment(), "PlaceFragment")
                 }
             } else {
                 // 선택되지 않았다면 알림을 주는 로직
