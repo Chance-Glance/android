@@ -9,12 +9,14 @@ import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.ActivityPlanBinding
 import com.chanceglance.mohagonocar.presentation.festival.FestivalDetailFragment
 import com.chanceglance.mohagonocar.presentation.festival.plan.calendar.ScheduleFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+@AndroidEntryPoint
 class PlanActivity:AppCompatActivity() {
     private lateinit var binding:ActivityPlanBinding
     private val planViewModel: PlanViewModel by viewModels()

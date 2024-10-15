@@ -9,11 +9,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.chanceglance.mohagonocar.databinding.FragmentTimeBinding
-import com.chanceglance.mohagonocar.presentation.festival.plan.AddPlaceFragment
 import com.chanceglance.mohagonocar.presentation.festival.plan.PlanActivity
 import com.chanceglance.mohagonocar.presentation.festival.plan.PlanViewModel
+import com.chanceglance.mohagonocar.presentation.festival.plan.nearby.NearbyPlaceFragment
 
 class TimeFragment:Fragment() {
     private var _binding: FragmentTimeBinding?= null
@@ -64,7 +63,7 @@ class TimeFragment:Fragment() {
 
         binding.btnSubmit.setOnClickListener{
             if(binding.btnSubmit.isSelected){
-                (activity as PlanActivity).replaceFragment(AddPlaceFragment(), "AddPlaceFragment")
+                (activity as PlanActivity).replaceFragment(NearbyPlaceFragment(), "NearbyPlaceFragment")
             }else {
                 // 선택되지 않았다면 알림을 주는 로직
                 Toast.makeText(requireContext(), "미선택된 항목이 있습니다.", Toast.LENGTH_SHORT).show()

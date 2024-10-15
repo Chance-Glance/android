@@ -29,14 +29,14 @@ class FestivalDotAdapter(var context:Context):PagerAdapter() {
 
         // 이미지 리스트가 비어 있으면 기본 이미지를 로드
         if (imageList == null || imageList.isEmpty()) {
-            Log.d("festivalDotAdapter", "Image list is null or empty, setting default image")
+            //Log.d("festivalDotAdapter", "Image list is null or empty, setting default image")
             imageView.setImageResource(R.drawable.cat) // 기본 이미지 설정
             Log.e("festivalDotAdapter", "Image list is null or empty, setting default image")
 
         } else {
             // imageUrlList에서 position에 해당하는 이미지를 불러와 설정
             val imageUrl = imageList[position % imageList.size] // 이미지를 순환해서 사용
-            Log.d("festivalDotAdapter", "Loading image from URL: $imageUrl")
+            //Log.d("festivalDotAdapter", "Loading image from URL: $imageUrl")
             imageView.load(imageUrl) {
                 placeholder(R.drawable.cat) // 이미지가 로드되는 동안 보여줄 플레이스홀더 이미지
                 error(R.drawable.error) // 오류가 발생할 경우 보여줄 이미지

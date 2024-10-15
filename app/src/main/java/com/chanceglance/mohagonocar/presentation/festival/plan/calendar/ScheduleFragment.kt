@@ -48,6 +48,8 @@ class ScheduleFragment : Fragment() {
         val itemJsonString = arguments?.getString("festivalItem")
         val festivalItem = itemJsonString?.let { Json.decodeFromString<ResponseFestivalDto.Data.Item>(it) }!!
 
+        planViewModel.getFestivalId(festivalItem.id)
+
         // 초기 달력 설정
         updateCalendarView(festivalItem.activePeriod)
 
