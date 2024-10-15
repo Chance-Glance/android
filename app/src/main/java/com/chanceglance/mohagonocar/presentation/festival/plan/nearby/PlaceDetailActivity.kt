@@ -1,4 +1,4 @@
-package com.chanceglance.mohagonocar.presentation.festival.plan
+package com.chanceglance.mohagonocar.presentation.festival.plan.nearby
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

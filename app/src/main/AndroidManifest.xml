@@ -34,7 +34,7 @@
             android:exported="false">
         </activity>
 
-        <activity android:name=".presentation.festival.plan.PlaceDetailActivity"
+        <activity android:name=".presentation.festival.plan.nearby.PlaceDetailActivity"
             android:exported="false">
         </activity>
     </application>
