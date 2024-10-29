@@ -1,6 +1,9 @@
 package com.chanceglance.mohagonocar.presentation.festival.plan
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -9,6 +12,7 @@ import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.ActivityPlanBinding
 import com.chanceglance.mohagonocar.presentation.festival.FestivalDetailFragment
 import com.chanceglance.mohagonocar.presentation.festival.plan.calendar.ScheduleFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -17,9 +21,15 @@ import java.util.Calendar
 import java.util.Locale
 
 @AndroidEntryPoint
-class PlanActivity:AppCompatActivity() {
-    private lateinit var binding:ActivityPlanBinding
+class PlanActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityPlanBinding
     private val planViewModel: PlanViewModel by viewModels()
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
+
+    companion object {
+        const val REQUEST_CODE = 1001 // 원하는 고유 값으로 설정
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,17 +39,17 @@ class PlanActivity:AppCompatActivity() {
 
     }
 
-    private fun initBinds(){
-        binding= ActivityPlanBinding.inflate(layoutInflater)
+    private fun initBinds() {
+        binding = ActivityPlanBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
 
-    private fun setting(){
+    private fun setting() {
         val itemJsonString = intent.getStringExtra("festival")
         val item = itemJsonString?.let { Json.decodeFromString<ResponseFestivalDto.Data.Item>(it) }
 
-        binding.tvName.text=item!!.name
-        binding.tvLocation.text=item!!.address
+        binding.tvName.text = item!!.name
+        binding.tvLocation.text = item!!.address
 
         val scheduleFragment = ScheduleFragment().apply {
             arguments = Bundle().apply {
@@ -66,9 +76,11 @@ class PlanActivity:AppCompatActivity() {
             binding.btnStart.text = formattedDate
             binding.btnEnd.text = formattedDate
         }
+
+        showCourseText()
     }
 
-    fun replaceFragment(fragment: Fragment, tag: String){
+    fun replaceFragment(fragment: Fragment, tag: String) {
         val transaction = supportFragmentManager.beginTransaction()
 
         // 현재 보이는 프래그먼트를 숨김
@@ -87,6 +99,14 @@ class PlanActivity:AppCompatActivity() {
 
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    fun showCourseFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.fcv_course, fragment)
+            .commit()
+
+        binding.fcvCourse.visibility=View.VISIBLE
     }
 
     // 날짜를 "dd MMM" 형식으로 변환하는 함수
@@ -112,6 +132,52 @@ class PlanActivity:AppCompatActivity() {
             // 백스택이 비어 있으면 액티비티 종료
             finish()
         }
+    }
+
+    private fun showCourseText() {
+        // BottomSheetBehavior 설정
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.fcvCourse)
+
+        // BottomSheet의 초기 상태를 Collapsed로 설정
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        // BottomSheet의 peek height를 400dp로 설정
+        bottomSheetBehavior.peekHeight = (400 * resources.displayMetrics.density).toInt()
+
+        // BottomSheet의 상태 변화 이벤트 처리
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                // 상태 변화에 따른 처리
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        // 확장 상태
+                        println("BottomSheet Expanded")
+                    }
+
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        // 축소 상태
+                        println("BottomSheet Collapsed")
+                    }
+
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                        // 드래그 중
+                    }
+
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                        // 정착 중 (멈추기 직전)
+                    }
+
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        // 숨김 상태
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // 슬라이드 중일 때의 동작 처리 (예: 슬라이드된 퍼센트를 이용한 UI 변화)
+            }
+        })
     }
 
     // Android의 기본 뒤로가기 동작 처리

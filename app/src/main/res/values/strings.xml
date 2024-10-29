@@ -25,6 +25,7 @@
     <string name="plan_place_name">여행 장소명</string>
     <string name="plan_place_location">장소 위치</string>
     <string name="plan_finish">선택 완료</string>
+    <string name="btn_max_error">너무 많습니다!</string>
 
     <string name="place_distinguish">장소 구분(음식점/명소)</string>
 </resources>

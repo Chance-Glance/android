@@ -1,9 +1,13 @@
 package com.chanceglance.mohagonocar.data.repositoryImpl
 
 import com.chanceglance.mohagonocar.data.datasource.AuthDataSource
+import com.chanceglance.mohagonocar.data.requestDto.RequestTravelCourseDto
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.data.responseDto.ResponseNearbyPlaceDto
+import com.chanceglance.mohagonocar.data.responseDto.ResponseTravelCourseDto
 import com.chanceglance.mohagonocar.domain.repository.AuthRepository
+import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -22,6 +26,18 @@ class AuthRepositoryImpl @Inject constructor(
     ): Result<ResponseNearbyPlaceDto> {
         return runCatching {
             authDataSource.getNearbyPlace(festivalId, page, size)
+        }
+    }
+
+    override suspend fun getTravelCourse(
+        festivalId: Int,
+        travelDate: LocalDate,
+        leaveTime: LocalTime,
+        arrivalTime: LocalTime,
+        travelPlaceIds: List<Int>
+    ): Result<ResponseTravelCourseDto> {
+        return runCatching {
+            authDataSource.getTravelCourse(RequestTravelCourseDto(festivalId, travelDate, leaveTime, arrivalTime, travelPlaceIds))
         }
     }
 }

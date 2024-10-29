@@ -1,8 +1,12 @@
 package com.chanceglance.mohagonocar.data.service
 
+import com.chanceglance.mohagonocar.data.requestDto.RequestTravelCourseDto
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.data.responseDto.ResponseNearbyPlaceDto
+import com.chanceglance.mohagonocar.data.responseDto.ResponseTravelCourseDto
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -20,4 +24,9 @@ interface AuthService {
         @Query("page") page:Int,
         @Query("size") size:Int,
     ):ResponseNearbyPlaceDto
+
+    @POST("/api/v1/travel-plan")
+    suspend fun getTravelCourse(
+        @Body requestTravelCourseDto: RequestTravelCourseDto
+    ):ResponseTravelCourseDto
 }

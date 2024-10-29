@@ -1,8 +1,14 @@
 package com.chanceglance.mohagonocar.presentation.festival.plan.nearby
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
+import android.content.Context
+import android.transition.ChangeBounds
+import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -10,16 +16,17 @@ import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseNearbyPlaceDto
 import com.chanceglance.mohagonocar.databinding.ItemPlaceBinding
 
-class NearbyPlaceAdapter(private val onItemClicked: (ResponseNearbyPlaceDto.Data.Item) -> Unit): RecyclerView.Adapter<NearbyPlaceAdapter.AddPlaceViewHolder>(){
-    /*private val placeList:List<String> = listOf("구수민", "경기대학교", "전민주", "노태윤", "김송은",
-        "김상후","구수민", "경기대학교", "전민주", "노태윤", "김송은", "김상후",)*/
+class NearbyPlaceAdapter(private val context:Context,  private val clickButton: (ResponseNearbyPlaceDto.Data.Item) -> Unit, private val onItemClicked: (ResponseNearbyPlaceDto.Data.Item) -> Unit): RecyclerView.Adapter<NearbyPlaceAdapter.AddPlaceViewHolder>(){
 
     private val placeList:MutableList<ResponseNearbyPlaceDto.Data.Item> = mutableListOf()
+    private val selectPlaceList:MutableList<ResponseNearbyPlaceDto.Data.Item> = mutableListOf()
 
     inner class AddPlaceViewHolder(
         private val binding:ItemPlaceBinding
     ):RecyclerView.ViewHolder(binding.root){
-        fun onBind(item:ResponseNearbyPlaceDto.Data.Item){
+        private var isOn = false
+
+        fun onBind(item: ResponseNearbyPlaceDto.Data.Item){
             Log.d("ImageList", "imageUrlList size: ${item.imageUrlList.size}")
             Log.d("ImageList", "First image URL: ${item.imageUrlList.getOrNull(0)}")
 
@@ -30,11 +37,120 @@ class NearbyPlaceAdapter(private val onItemClicked: (ResponseNearbyPlaceDto.Data
                     transformations(RoundedCornersTransformation(30f)) // 30f로 모서리 둥글게
                     error(R.drawable.cat) // 로드 실패 시 기본 이미지
                 }
+
+                // 선택 상태를 selectPlaceList에 따라 설정
+                isOn = selectPlaceList.contains(item)
+                updateButtonAppearance(isOn)
+
                 root.setOnClickListener{
                     onItemClicked(item)
                 }
+                btnSelect.setOnClickListener{
+                    toggleButton(item)
+                    clickButton(item)
+                }
             }
         }
+
+        // 버튼 상태 업데이트 함수
+        private fun updateButtonAppearance(isSelected: Boolean) {
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.btnSelect) // btnSelect는 ConstraintLayout이어야 함
+
+            // isSelected에 따라 슬라이더 위치 변경
+            val endBias = if (isSelected) 0.8f else 0.2f
+            constraintSet.setHorizontalBias(R.id.iv_slider, endBias)
+
+            // 애니메이션 적용
+            val transition = ChangeBounds()
+            transition.duration = 300
+            TransitionManager.beginDelayedTransition(binding.btnSelect, transition)
+            constraintSet.applyTo(binding.btnSelect)
+
+            // 색상 애니메이션 적용
+            val startColor = if (isSelected) context.getColor(R.color.plan_btn_purple) else context.getColor(R.color.white)
+            val endColor = if (isSelected) context.getColor(R.color.white) else context.getColor(R.color.plan_btn_purple)
+
+            ObjectAnimator.ofObject(binding.ivSlider, "backgroundColor", ArgbEvaluator(), startColor, endColor)
+                .apply {
+                    duration = 300
+                    start()
+                }
+
+            // 배경 변경
+            val backgroundDrawable =
+                if (isSelected) R.drawable.btn_background_selected else R.drawable.btn_background
+            binding.btnSelect.setBackgroundResource(backgroundDrawable)
+        }
+
+        private fun toggleButton(item: ResponseNearbyPlaceDto.Data.Item) {
+            isOn = !isOn
+            updateButtonAppearance(isOn)
+
+            if(isOn) selectPlaceList.add(item)
+            else selectPlaceList.remove(item)
+        }
+
+        /*fun onBind(item:ResponseNearbyPlaceDto.Data.Item){
+            Log.d("ImageList", "imageUrlList size: ${item.imageUrlList.size}")
+            Log.d("ImageList", "First image URL: ${item.imageUrlList.getOrNull(0)}")
+
+            with(binding){
+                tvName.text=item.name
+                tvLocation.text=item.address
+                ivImage.load(item.imageUrlList.getOrNull(0) ?: R.drawable.cat) {
+                    transformations(RoundedCornersTransformation(30f)) // 30f로 모서리 둥글게
+                    error(R.drawable.cat) // 로드 실패 시 기본 이미지
+                }
+                //btnSelect.isSelected = selectPlaceList.contains(item) // 버튼의 상태를 selectedItems에 따라 결정
+
+                root.setOnClickListener{
+                    onItemClicked(item)
+                }
+                btnSelect.setOnClickListener{
+                    toggleButton(item)
+                    clickButton(item)
+                }
+            }
+        }
+
+        private fun toggleButton(item: ResponseNearbyPlaceDto.Data.Item) {
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.btnSelect) // btnSelect는 ConstraintLayout이어야 함
+
+            // isOn에 따라 슬라이더 위치 변경
+            val endBias = if (isOn) 0.2f else 0.8f
+            constraintSet.setHorizontalBias(R.id.iv_slider, endBias)
+
+            // 애니메이션 적용
+            val transition = ChangeBounds()
+            transition.duration = 300
+            TransitionManager.beginDelayedTransition(binding.btnSelect, transition)
+            constraintSet.applyTo(binding.btnSelect)
+
+            // 색상 애니메이션 적용
+            val startColor = if (isOn) context.getColor(R.color.white) else context.getColor(R.color.plan_btn_purple)
+            val endColor = if (isOn) context.getColor(R.color.plan_btn_purple) else context.getColor(R.color.white)
+
+            ObjectAnimator.ofObject(binding.ivSlider, "backgroundColor", ArgbEvaluator(), startColor, endColor)
+                .apply {
+                    duration = 300
+                    start()
+                }
+
+            // 배경 변경
+            val backgroundDrawable =
+                if (isOn) R.drawable.btn_background else R.drawable.btn_background_selected
+            binding.btnSelect.setBackgroundResource(backgroundDrawable)
+
+            isOn = !isOn
+
+            if(isOn) selectPlaceList.addAll(listOf(item))
+            else{
+                if(selectPlaceList.contains(item))
+                    selectPlaceList.remove(item)
+            }
+        }*/
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddPlaceViewHolder {
@@ -53,5 +169,20 @@ class NearbyPlaceAdapter(private val onItemClicked: (ResponseNearbyPlaceDto.Data
         placeList.clear()
         placeList.addAll(list)
         notifyDataSetChanged()
+    }
+
+    // 선택된 상태 업데이트
+    fun updateSelection(item: ResponseNearbyPlaceDto.Data.Item, isSelected: Boolean) {
+        val index = placeList.indexOf(item)
+
+        if(isSelected){
+            selectPlaceList.add(item)
+        } else{
+            if(index != -1)
+                selectPlaceList.remove(item)
+        }
+
+        if(index != -1)
+            notifyItemChanged(index)
     }
 }
