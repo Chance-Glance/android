@@ -62,12 +62,13 @@ class TimeFragment:Fragment() {
         updateArrivalRecyclerView(0, 0) // 출발 시간보다 이후의 도착 시간만 표시
 
         binding.btnSubmit.setOnClickListener{
-            if(binding.btnSubmit.isSelected){
+            (activity as PlanActivity).replaceFragment(NearbyPlaceFragment(), "NearbyPlaceFragment")
+            /*if(binding.btnSubmit.isSelected){
                 (activity as PlanActivity).replaceFragment(NearbyPlaceFragment(), "NearbyPlaceFragment")
             }else {
                 // 선택되지 않았다면 알림을 주는 로직
                 Toast.makeText(requireContext(), "미선택된 항목이 있습니다.", Toast.LENGTH_SHORT).show()
-            }
+            }*/
         }
     }
 

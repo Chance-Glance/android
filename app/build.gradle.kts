@@ -110,6 +110,9 @@ dependencies {
 
     //kakao map
     implementation ("com.kakao.maps.open:android:2.11.9")
+
+    //shimmer
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
 }
 
 kapt {
