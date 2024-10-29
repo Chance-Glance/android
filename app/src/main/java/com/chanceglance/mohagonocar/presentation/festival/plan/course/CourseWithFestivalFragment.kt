@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.FragmentCourseWithFestivalBinding
+import com.chanceglance.mohagonocar.presentation.festival.plan.PlanActivity
 import com.kakao.vectormap.GestureType
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -42,6 +43,7 @@ class CourseWithFestivalFragment:Fragment() {
     }
 
     private fun setting(){
+        (activity as PlanActivity).showCourseFragment(CourseTextFragment())
 
         //kakaoMapView=binding.mvMap
         //setKakaoMap(ResponseFestivalDto.Data.Item.Location(37.406960, 127.115587))
@@ -105,4 +107,6 @@ class CourseWithFestivalFragment:Fragment() {
             }
         })
     }*/
+
+
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/iv_route_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="330dp"
+        android:minHeight="40dp"
+        android:background="@drawable/background_route"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/iv_type_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="@id/iv_route_background"
+        app:layout_constraintTop_toTopOf="@id/iv_route_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_route_background"/>
+
+    <TextView
+        android:id="@+id/tv_route_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        app:layout_constraintStart_toEndOf="@id/iv_type_icon"
+        app:layout_constraintTop_toTopOf="@id/iv_route_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_route_background"/>
+
+    <TextView
+        android:id="@+id/tv_route_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toStartOf="@id/iv_arrow"
+        app:layout_constraintTop_toTopOf="@id/iv_route_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_route_background"/>
+
+    <ImageView
+        android:id="@+id/iv_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_arrow_black_24"
+        app:layout_constraintTop_toTopOf="@id/iv_route_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_route_background"
+        app:layout_constraintStart_toStartOf="@id/iv_route_background"
+        app:layout_constraintEnd_toEndOf="@id/iv_route_background"/>
+
+    <TextView
+        android:id="@+id/tv_route_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        app:layout_constraintStart_toEndOf="@id/iv_arrow"
+        app:layout_constraintTop_toTopOf="@id/iv_route_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_route_background"/>
+
+    <TextView
+        android:id="@+id/tv_route_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="@id/iv_route_background"
+        app:layout_constraintTop_toTopOf="@id/iv_route_background"
+        app:layout_constraintBottom_toBottomOf="@id/iv_route_background"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

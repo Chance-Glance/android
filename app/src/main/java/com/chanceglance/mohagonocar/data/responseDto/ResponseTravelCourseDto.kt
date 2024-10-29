@@ -12,7 +12,7 @@ data class ResponseTravelCourseDto (
     @SerialName("message")
     val message:String,
     @SerialName("data")
-    val data:Data
+    val data:List<Data>
 ){
     @Serializable
     data class Data(
@@ -33,7 +33,7 @@ data class ResponseTravelCourseDto (
         @SerialName("totalDistance")
         val totalDistance:Double,
         @SerialName("subPaths")
-        val subPaths:String,
+        val subPaths:List<SubPaths>,
     ){
         @Serializable
         data class SubPaths(
