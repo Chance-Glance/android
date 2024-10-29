@@ -12,4 +12,6 @@
     <color name="plan_btn_grey">#B7B7B7</color>
 
     <color name="time_no_grey">#9BA4B5</color>
+    
+    <color name="plan_route_outline">#373A40</color>
 </resources>
