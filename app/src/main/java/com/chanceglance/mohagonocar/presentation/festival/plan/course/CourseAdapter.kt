@@ -63,11 +63,11 @@ class CourseAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class SubPathViewHolder(private val binding: ItemPlanRouteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CourseItem.SubPath) {
             if(item.pathType=="BUS"){
-                binding.ivTypeIcon.load(R.drawable.ic_bus_black_24)
+                binding.ivTypeIcon.load(R.drawable.ic_bus_black_15)
             }else if(item.pathType=="WALK"){
-                binding.ivTypeIcon.load(R.drawable.ic_walk_black_24)
+                binding.ivTypeIcon.load(R.drawable.ic_walk_black_15)
             }else{
-                binding.ivTypeIcon.load(R.drawable.ic_subway_black_24)
+                binding.ivTypeIcon.load(R.drawable.ic_subway_black_15)
             }
             //binding.tvRouteType.text = item.pathType
             binding.tvRouteStart.text = item.startPlaceName
