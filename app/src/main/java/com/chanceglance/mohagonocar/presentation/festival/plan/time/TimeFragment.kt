@@ -53,6 +53,8 @@ class TimeFragment:Fragment() {
 
             // 선택된 출발 시간을 저장
             //binding.rvDepart.text = "출발 시간: $selectedTime"
+            // 선택된 출발 시간을 ViewModel에 저장
+            planViewModel.setDepartTime(selectedHour, selectedMinute)
             updateArrivalRecyclerView(selectedHour, selectedMinute)
         }, { false }) // 출발 시간은 항상 활성화
 
@@ -88,6 +90,10 @@ class TimeFragment:Fragment() {
         val arrivalAdapter = TimeAdapter(filteredTimes, { selectedTime ->
             // 도착 시간 선택 처리
             //binding.rvArrival.text = "도착 시간: $selectedTime"
+            val selectedHour = selectedTime.split(":")[0].toInt()
+            val selectedMinute = selectedTime.split(":")[1].toInt()
+            // 선택된 도착 시간을 ViewModel에 저장
+            planViewModel.setArrivalTime(selectedHour, selectedMinute)
         }, { time ->
             // 출발 시간 이전 시간은 회색으로 표시
             val hour = time.split(":")[0].toInt()

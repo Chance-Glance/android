@@ -4,6 +4,8 @@ import com.chanceglance.mohagonocar.data.requestDto.RequestTravelCourseDto
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.data.responseDto.ResponseNearbyPlaceDto
 import com.chanceglance.mohagonocar.data.responseDto.ResponseTravelCourseDto
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -28,5 +30,5 @@ interface AuthService {
     @POST("/api/v1/travel-plan")
     suspend fun getTravelCourse(
         @Body requestTravelCourseDto: RequestTravelCourseDto
-    ):ResponseTravelCourseDto
+    ): Response<ResponseBody>
 }

@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseNearbyPlaceDto
 import com.chanceglance.mohagonocar.databinding.FragmentNearbyPlaceBinding
+import com.chanceglance.mohagonocar.extension.CourseState
 import com.chanceglance.mohagonocar.extension.NearbyPlaceState
 import com.chanceglance.mohagonocar.presentation.festival.plan.PlanActivity
 import com.chanceglance.mohagonocar.presentation.festival.plan.PlanActivity.Companion.REQUEST_CODE
@@ -24,6 +25,7 @@ import com.chanceglance.mohagonocar.presentation.festival.plan.course.CourseWith
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import retrofit2.Response
 
@@ -33,7 +35,7 @@ class NearbyPlaceFragment : Fragment() {
     private val binding: FragmentNearbyPlaceBinding
         get() = requireNotNull(_binding) { "null" }
     private val planViewModel: PlanViewModel by activityViewModels()
-    private val nearbyViewModel: NearbyViewModel by viewModels()
+    private val nearbyViewModel: NearbyViewModel by activityViewModels()
 
     private lateinit var nearbyPlaceAdapter: NearbyPlaceAdapter
 
@@ -95,14 +97,46 @@ class NearbyPlaceFragment : Fragment() {
                     }
                 }
             }
-        }
 
-        binding.btnSubmit.setOnClickListener {
-            if (binding.btnSubmit.isSelected) {
-                (activity as PlanActivity).replaceFragment(
-                    CourseWithFestivalFragment(),
-                    "CourseWithFestivalFragment"
-                )
+            binding.btnSubmit.setOnClickListener {
+                if (binding.btnSubmit.isSelected) {
+                    val id=planViewModel.festivalId.value!!
+                    val date = planViewModel.selectedDate.value!!
+                    val depart = planViewModel.selectedDepartTime.value!!
+                    val arrival = planViewModel.selectedArrivalTime.value!!
+                    val placeList = nearbyViewModel.selectPlaceList.value?.map { it.id } ?: emptyList()
+
+                    nearbyViewModel.getCourse(id, date, depart, arrival, placeList)
+                    lifecycleScope.launch {
+                        nearbyViewModel.courseState.collect{courseState->
+                            when(courseState){
+                                is CourseState.Success -> {
+                                    val fragment = CourseWithFestivalFragment()
+                                    (activity as PlanActivity).replaceFragment(fragment, "CourseWithFestivalFragment")
+                                    /*val courseData = courseState.data // ResponseTravelCourseDto 객체를 가져옴
+
+                                    // ResponseTravelCourseDto를 JSON 문자열로 변환
+                                    val courseDataJson = Json.encodeToString(courseData)
+
+                                    // Fragment에 전달할 Bundle 생성
+                                    val fragment = CourseWithFestivalFragment().apply {
+                                        arguments = Bundle().apply {
+                                            putString("courseData", courseDataJson)
+                                        }
+                                    }
+
+                                    // Fragment 교체
+                                    (activity as PlanActivity).replaceFragment(fragment, "CourseWithFestivalFragment")
+ */                               }
+                                is CourseState.Loading->{}
+                                is CourseState.Error->{
+                                    Log.e("nearbyPlaceFragment","courseState is error!-${courseState.message}")
+                                }
+                            }
+                        }
+                    }
+
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
@@ -43,11 +44,45 @@ class CourseWithFestivalFragment:Fragment() {
     }
 
     private fun setting(){
-        (activity as PlanActivity).showCourseFragment(CourseTextFragment())
+        // JSON 문자열을 arguments에서 가져와 바로 CourseTextFragment로 전달
+        /*val courseDataJson = arguments?.getString("courseData")
+        courseDataJson?.let {
+            showCourseTextFragment(it)
+        }*/
+        showCourseTextFragment()
 
         //kakaoMapView=binding.mvMap
         //setKakaoMap(ResponseFestivalDto.Data.Item.Location(37.406960, 127.115587))
 
+    }
+
+    private fun showCourseTextFragment() {
+        (activity as PlanActivity).showCourseFragment(CourseTextFragment())
+        /*val courseTextFragment = CourseTextFragment().apply {
+            arguments = Bundle().apply {
+                putString("courseData", courseDataJson)
+            }
+        }
+
+        // CourseTextFragment 표시
+        (activity as PlanActivity).showCourseFragment(courseTextFragment)*/
+    }
+
+    private fun setupBackButtonHandling() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // PlanActivity의 hideFcvCourse 메서드를 호출
+                (activity as? PlanActivity)?.hideFcvCourse()
+                // Fragment 스택에서 현재 Fragment 제거
+                parentFragmentManager.popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 /*    private fun setKakaoMap(location: ResponseFestivalDto.Data.Item.Location) {
