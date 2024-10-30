@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chanceglance.mohagonocar.data.responseDto.ResponseNearbyPlaceDto
 import com.chanceglance.mohagonocar.domain.repository.AuthRepository
+import com.chanceglance.mohagonocar.extension.CourseState
 import com.chanceglance.mohagonocar.extension.FestivalState
 import com.chanceglance.mohagonocar.extension.NearbyPlaceState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,8 @@ import okhttp3.ResponseBody
 import okhttp3.internal.notify
 import org.json.JSONObject
 import retrofit2.HttpException
+import java.time.LocalDate
+import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,6 +37,9 @@ class NearbyViewModel @Inject constructor(
 
     private val _selectPlace = MutableLiveData<ResponseNearbyPlaceDto.Data.Item>()
     val selectPlace: LiveData<ResponseNearbyPlaceDto.Data.Item> = _selectPlace
+
+    private val _courseState = MutableStateFlow<CourseState>(CourseState.Loading)
+    val courseState: StateFlow<CourseState> = _courseState.asStateFlow()
 
     fun getNearbyPlace(festivalId: Int) {
         viewModelScope.launch {
@@ -89,5 +95,52 @@ class NearbyViewModel @Inject constructor(
 
     fun isSelect(place: ResponseNearbyPlaceDto.Data.Item): Boolean {
         return _selectPlaceList.value?.contains(place) == true
+    }
+
+    fun getCourse(
+        festivalId: Int,
+        travelDate: LocalDate,
+        leaveTime: LocalTime,
+        arrivalTime: LocalTime,
+        travelPlaceIds: List<Int>
+    ) {
+        Log.d(
+            "nearbyViewModel",
+            "date: ${travelDate}, leaveTime: ${leaveTime}, arrivalTime: ${arrivalTime}"
+        )
+        viewModelScope.launch {
+            authRepository.getTravelCourse(
+                festivalId,
+                travelDate,
+                leaveTime,
+                arrivalTime,
+                travelPlaceIds
+            ).onSuccess { response ->
+                _courseState.value = CourseState.Success(response)
+                Log.d("nearbyViewModel", "nearbyViewModel - course 가져오기 성공!")
+            }.onFailure {
+                _courseState.value =
+                    CourseState.Error("Error response failure: ${it.message}")
+                if (it is HttpException) {
+                    try {
+                        val errorBody: ResponseBody? = it.response()?.errorBody()
+                        val errorBodyString = errorBody?.string() ?: ""
+
+                        // 전체 에러 바디를 로깅하여 디버깅
+                        Log.e("nearbyViewModel", "Full error body: $errorBodyString")
+
+                        // JSONObject를 사용하여 메시지 추출
+                        val jsonObject = JSONObject(errorBodyString)
+                        val errorMessage = jsonObject.optString("message", "Unknown error")
+
+                        // 추출된 에러 메시지 로깅
+                        Log.e("nearbyViewModel", "Error message: $errorMessage")
+                    } catch (e: Exception) {
+                        // JSON 파싱 실패 시 로깅
+                        Log.e("nearbyViewModel", "Error parsing error body", e)
+                    }
+                }
+            }
+        }
     }
 }

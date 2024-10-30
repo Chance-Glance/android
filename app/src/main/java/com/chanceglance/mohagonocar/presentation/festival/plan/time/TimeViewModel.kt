@@ -11,10 +11,14 @@ class TimeViewModel:ViewModel() {
     val decideDepart: LiveData<Boolean> = _decideDepart
     val decideArrival: LiveData<Boolean> = _decideArrival
 
+
+
     fun getDepart(decide:Boolean){
         _decideDepart.value=decide
     }
     fun getArrival(decide: Boolean){
         _decideArrival.value=decide
     }
+
+
 }

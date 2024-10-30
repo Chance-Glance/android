@@ -64,10 +64,12 @@ class CourseAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun bind(item: CourseItem.SubPath) {
             if(item.pathType=="BUS"){
                 binding.ivTypeIcon.load(R.drawable.ic_bus_black_24)
-            }else{
+            }else if(item.pathType=="WALK"){
                 binding.ivTypeIcon.load(R.drawable.ic_walk_black_24)
+            }else{
+                binding.ivTypeIcon.load(R.drawable.ic_subway_black_24)
             }
-            binding.tvRouteType.text = item.pathType
+            //binding.tvRouteType.text = item.pathType
             binding.tvRouteStart.text = item.startPlaceName
             binding.tvRouteEnd.text = item.endPlaceName
             binding.tvRouteTime.text = "${item.sectionTime}분"

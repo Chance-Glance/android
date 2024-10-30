@@ -12,6 +12,7 @@ import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.ActivityPlanBinding
 import com.chanceglance.mohagonocar.presentation.festival.FestivalDetailFragment
 import com.chanceglance.mohagonocar.presentation.festival.plan.calendar.ScheduleFragment
+import com.chanceglance.mohagonocar.presentation.festival.plan.nearby.NearbyViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.decodeFromString
@@ -24,6 +25,7 @@ import java.util.Locale
 class PlanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlanBinding
     private val planViewModel: PlanViewModel by viewModels()
+    private val nearbyViewModel:NearbyViewModel by viewModels()
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
@@ -68,9 +70,12 @@ class PlanActivity : AppCompatActivity() {
             handleBackPressed()
         }
 
-        // ViewModel 데이터 관찰
         planViewModel.selectedDate.observe(this) { date ->
-            val (year, month, day) = date
+            // LocalDate의 year, month, dayOfMonth를 사용
+            val year = date.year
+            val month = date.monthValue // month는 1~12로 제공
+            val day = date.dayOfMonth
+
             // SimpleDateFormat을 사용하여 날짜 포맷 설정 (e.g., "11 Aug")
             val formattedDate = formatDateToDayMonth(year, month, day)
             binding.btnStart.text = formattedDate
@@ -232,6 +237,11 @@ class PlanActivity : AppCompatActivity() {
                 // 슬라이드 중일 때의 동작 처리 (예: 슬라이드된 퍼센트를 이용한 UI 변화)
             }
         })*/
+    }
+
+    // fcvCourse의 visibility를 제어하는 메서드 추가
+    fun hideFcvCourse() {
+        binding.fcvCourse.visibility = View.GONE
     }
 
     // Android의 기본 뒤로가기 동작 처리
