@@ -104,7 +104,7 @@ class PlanActivity : AppCompatActivity() {
         }*/
 
         // 새 프래그먼트를 보여줌, 없으면 추가
-        transaction.replace(R.id.fcv_plan, fragment, tag)
+        transaction.replace(R.id.fcv_plan, fragment)
         transaction.addToBackStack(null) // 백스택에 추가
         Log.d("planActivity", "replaceFragment - Fragment ${fragment.javaClass.simpleName} added to backstack")
         transaction.commit()

@@ -18,8 +18,11 @@ class TimeFragment:Fragment() {
     private var _binding: FragmentTimeBinding?= null
     private val binding: FragmentTimeBinding
         get()= requireNotNull(_binding) {"null"}
+
     private val planViewModel: PlanViewModel by activityViewModels()
     private val timeViewModel: TimeViewModel by viewModels()
+    private lateinit var departAdapter: TimeAdapter
+    private lateinit var arrivalAdapter: TimeAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,31 +50,35 @@ class TimeFragment:Fragment() {
         val times = generateTimes()
 
         // 출발 시간 RecyclerView 설정
-        val departAdapter = TimeAdapter(times, { selectedTime ->
-            val selectedHour = selectedTime.split(":")[0].toInt()
-            val selectedMinute = selectedTime.split(":")[1].toInt()
-
-            // 선택된 출발 시간을 저장
-            //binding.rvDepart.text = "출발 시간: $selectedTime"
-            // 선택된 출발 시간을 ViewModel에 저장
-            planViewModel.setDepartTime(selectedHour, selectedMinute)
-            updateArrivalRecyclerView(selectedHour, selectedMinute)
-        }, { false }) // 출발 시간은 항상 활성화
-
+        setDepartTimeButtons(times)
         binding.rvDepart.adapter = departAdapter
 
         // 초기 도착 시간 설정
         updateArrivalRecyclerView(0, 0) // 출발 시간보다 이후의 도착 시간만 표시
 
         binding.btnSubmit.setOnClickListener{
-            (activity as PlanActivity).replaceFragment(NearbyPlaceFragment(), "NearbyPlaceFragment")
-            /*if(binding.btnSubmit.isSelected){
+            //(activity as PlanActivity).replaceFragment(NearbyPlaceFragment(), "NearbyPlaceFragment")
+            if(binding.btnSubmit.isSelected){
                 (activity as PlanActivity).replaceFragment(NearbyPlaceFragment(), "NearbyPlaceFragment")
             }else {
                 // 선택되지 않았다면 알림을 주는 로직
                 Toast.makeText(requireContext(), "미선택된 항목이 있습니다.", Toast.LENGTH_SHORT).show()
-            }*/
+            }
         }
+    }
+
+    private fun setDepartTimeButtons(times: List<String>) {
+        departAdapter = TimeAdapter(times, { selectedTime ->
+            val selectedHour = selectedTime.split(":")[0].toInt()
+            val selectedMinute = selectedTime.split(":")[1].toInt()
+
+            // 선택된 출발 시간을 저장
+            //binding.rvDepart.text = "출발 시간: $selectedTime"
+            // 선택된 출발 시간을 ViewModel에 저장
+            timeViewModel.getDepart(true)
+            planViewModel.setDepartTime(selectedHour, selectedMinute)
+            updateArrivalRecyclerView(selectedHour, selectedMinute)
+        }, { false }) // 출발 시간은 항상 활성화
     }
 
     private fun generateTimes(): List<String> {
@@ -87,13 +94,14 @@ class TimeFragment:Fragment() {
         // 도착 시간은 출발 시간 이후로만 가능하게 필터링
         val filteredTimes = generateTimes()
 
-        val arrivalAdapter = TimeAdapter(filteredTimes, { selectedTime ->
+        arrivalAdapter = TimeAdapter(filteredTimes, { selectedTime ->
             // 도착 시간 선택 처리
             //binding.rvArrival.text = "도착 시간: $selectedTime"
             val selectedHour = selectedTime.split(":")[0].toInt()
             val selectedMinute = selectedTime.split(":")[1].toInt()
             // 선택된 도착 시간을 ViewModel에 저장
             planViewModel.setArrivalTime(selectedHour, selectedMinute)
+            timeViewModel.getArrival(true)
         }, { time ->
             // 출발 시간 이전 시간은 회색으로 표시
             val hour = time.split(":")[0].toInt()
@@ -126,6 +134,20 @@ class TimeFragment:Fragment() {
         val isDepartDecided = timeViewModel.decideDepart.value ?: false
         val isArrivalDecided = timeViewModel.decideArrival.value ?: false
         binding.btnSubmit.isSelected = isDepartDecided && isArrivalDecided
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        planViewModel.selectedDepartTime.value?.let{time->
+            binding.btnSubmit.isSelected=true
+            updateArrivalRecyclerView(time.hour, time.minute)
+            departAdapter.setSelectedTime(planViewModel.selectedDepartTime.value)
+        }
+
+        planViewModel.selectedArrivalTime.value?.let{time->
+            arrivalAdapter.setSelectedTime(time)
+        }
     }
 
 

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.chanceglance.mohagonocar.databinding.ItemTimeBinding
 import com.chanceglance.mohagonocar.R
+import java.time.LocalTime
 
 class TimeAdapter(
     private val times: List<String>,
@@ -13,6 +14,7 @@ class TimeAdapter(
 ) : RecyclerView.Adapter<TimeAdapter.TimeViewHolder>() {
 
     private var selectedPosition: Int? = null // 선택된 시간의 위치를 저장
+    private var selectedTime: LocalTime? = null // 선택된 시간을 저장
 
     inner class TimeViewHolder(private val binding: ItemTimeBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -21,11 +23,7 @@ class TimeAdapter(
             binding.btnTime.text = time
 
             // 선택된 시간은 강조 표시
-            if (position == selectedPosition) {
-                binding.btnTime.isSelected=true
-            } else {
-                binding.btnTime.isSelected=false
-            }
+            binding.btnTime.isSelected = position == selectedPosition
 
             // 출발 시간 이전이면 회색 처리 및 클릭 비활성화
             if (isDisabled) {
@@ -40,6 +38,7 @@ class TimeAdapter(
             binding.btnTime.setOnClickListener {
                 if (!isDisabled) {
                     selectedPosition = position // 선택된 위치 저장
+                    selectedTime = LocalTime.parse(time) // 선택된 시간 저장
                     onTimeSelected(time)
                     notifyDataSetChanged() // 선택 상태를 업데이트
                 }
@@ -59,5 +58,11 @@ class TimeAdapter(
 
     override fun getItemCount(): Int {
         return times.size
+    }
+
+    fun setSelectedTime(time: LocalTime?) {
+        selectedTime = time
+        selectedPosition = times.indexOfFirst { LocalTime.parse(it) == selectedTime } // 선택된 시간의 위치를 찾기
+        notifyDataSetChanged() // 선택된 상태로 UI 업데이트
     }
 }
