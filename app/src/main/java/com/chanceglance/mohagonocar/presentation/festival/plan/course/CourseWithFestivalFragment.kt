@@ -50,6 +50,7 @@ class CourseWithFestivalFragment:Fragment() {
             showCourseTextFragment(it)
         }*/
         showCourseTextFragment()
+        setupBackButtonHandling()
 
         //kakaoMapView=binding.mvMap
         //setKakaoMap(ResponseFestivalDto.Data.Item.Location(37.406960, 127.115587))
@@ -72,7 +73,7 @@ class CourseWithFestivalFragment:Fragment() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // PlanActivity의 hideFcvCourse 메서드를 호출
-                (activity as? PlanActivity)?.hideFcvCourse()
+                (activity as? PlanActivity)?.deleteFcvCourse()
                 // Fragment 스택에서 현재 Fragment 제거
                 parentFragmentManager.popBackStack()
             }
