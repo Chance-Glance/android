@@ -24,6 +24,7 @@ import kotlinx.serialization.json.Json
 class PlaceDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlaceDetailBinding
     private lateinit var imagesAdapter: FestivalDotAdapter
+
     private var isOn = false
     private val placeDetailViewModel:PlaceDetailViewModel by viewModels()
 
@@ -110,8 +111,8 @@ class PlaceDetailActivity : AppCompatActivity() {
         constraintSet.applyTo(binding.btnSelect)
 
         // 색상 애니메이션 적용
-        val startColor = if (isOn) getColor(R.color.white) else getColor(R.color.plan_btn_purple)
-        val endColor = if (isOn) getColor(R.color.plan_btn_purple) else getColor(R.color.white)
+        val startColor = if (isOn) getColor(R.color.white) else getColor(R.color.plan_btn_blue)
+        val endColor = if (isOn) getColor(R.color.plan_btn_blue) else getColor(R.color.white)
 
         ObjectAnimator.ofObject(binding.ivSlider, "backgroundColor", ArgbEvaluator(), startColor, endColor)
             .apply {

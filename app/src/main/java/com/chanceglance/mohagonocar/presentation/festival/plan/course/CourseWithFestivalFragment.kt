@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import coil.load
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.FragmentCourseWithFestivalBinding
@@ -59,6 +60,20 @@ class CourseWithFestivalFragment:Fragment() {
 
     private fun showCourseTextFragment() {
         (activity as PlanActivity).showCourseFragment(CourseTextFragment())
+
+        val activity = activity as? PlanActivity
+        val tvNameText = activity?.getTvNameText() ?: ""
+
+        if (tvNameText.contains("공룡")) {
+            binding.ivCourse.load(R.drawable.course_dinosour_resize)
+        }else{
+            binding.ivCourse.load(R.drawable.course_cactus_resize)
+        }
+
+        binding.ivCourse.setOnClickListener{
+            activity!!.showBottomSheet()
+        }
+
         /*val courseTextFragment = CourseTextFragment().apply {
             arguments = Bundle().apply {
                 putString("courseData", courseDataJson)

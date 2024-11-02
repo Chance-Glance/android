@@ -66,22 +66,22 @@ class NearbyPlaceFragment : Fragment() {
                                 clickButton = { placeItem ->
                                     selectButton(placeItem)
                                 },
-                                    onItemClicked = { item ->
-                                        val festival: ResponseNearbyPlaceDto.Data.Item = item
-                                        val itemJsonString = Json.encodeToString(
-                                            ResponseNearbyPlaceDto.Data.Item.serializer(),
-                                            festival
-                                        )
+                                onItemClicked = { item ->
+                                    val festival: ResponseNearbyPlaceDto.Data.Item = item
+                                    val itemJsonString = Json.encodeToString(
+                                        ResponseNearbyPlaceDto.Data.Item.serializer(),
+                                        festival
+                                    )
 
-                                       // val list = ArrayList(getList()) // List를 ArrayList로 변환
+                                    // val list = ArrayList(getList()) // List를 ArrayList로 변환
 
-                                        val intent =
-                                            Intent(requireContext(), PlaceDetailActivity::class.java)
-                                        intent.putExtra("placeItem", itemJsonString) // 클릭된 아이템 정보 전달
-                                        intent.putExtra("isSelect", nearbyViewModel.isSelect(item))
-                                        //intent.putExtra("selectList",list)
-                                        placeDetailLauncher.launch(intent)
-                                    })
+                                    val intent =
+                                        Intent(requireContext(), PlaceDetailActivity::class.java)
+                                    intent.putExtra("placeItem", itemJsonString) // 클릭된 아이템 정보 전달
+                                    intent.putExtra("isSelect", nearbyViewModel.isSelect(item))
+                                    //intent.putExtra("selectList",list)
+                                    placeDetailLauncher.launch(intent)
+                                })
 
                             nearbyPlaceAdapter.getList(nearbyPlaceState.data.data.items)
                             binding.rvPlaces.adapter = nearbyPlaceAdapter
@@ -100,19 +100,23 @@ class NearbyPlaceFragment : Fragment() {
 
             binding.btnSubmit.setOnClickListener {
                 if (binding.btnSubmit.isSelected) {
-                    val id=planViewModel.festivalId.value!!
+                    val id = planViewModel.festivalId.value!!
                     val date = planViewModel.selectedDate.value!!
                     val depart = planViewModel.selectedDepartTime.value!!
                     val arrival = planViewModel.selectedArrivalTime.value!!
-                    val placeList = nearbyViewModel.selectPlaceList.value?.map { it.id } ?: emptyList()
+                    val placeList =
+                        nearbyViewModel.selectPlaceList.value?.map { it.id } ?: emptyList()
 
                     nearbyViewModel.getCourse(id, date, depart, arrival, placeList)
                     lifecycleScope.launch {
-                        nearbyViewModel.courseState.collect{courseState->
-                            when(courseState){
+                        nearbyViewModel.courseState.collect { courseState ->
+                            when (courseState) {
                                 is CourseState.Success -> {
                                     val fragment = CourseWithFestivalFragment()
-                                    (activity as PlanActivity).replaceFragment(fragment, "CourseWithFestivalFragment")
+                                    (activity as PlanActivity).replaceFragment(
+                                        fragment,
+                                        "CourseWithFestivalFragment"
+                                    )
                                     /*val courseData = courseState.data // ResponseTravelCourseDto 객체를 가져옴
 
                                     // ResponseTravelCourseDto를 JSON 문자열로 변환
@@ -127,10 +131,15 @@ class NearbyPlaceFragment : Fragment() {
 
                                     // Fragment 교체
                                     (activity as PlanActivity).replaceFragment(fragment, "CourseWithFestivalFragment")
- */                               }
-                                is CourseState.Loading->{}
-                                is CourseState.Error->{
-                                    Log.e("nearbyPlaceFragment","courseState is error!-${courseState.message}")
+ */
+                                }
+
+                                is CourseState.Loading -> {}
+                                is CourseState.Error -> {
+                                    Log.e(
+                                        "nearbyPlaceFragment",
+                                        "courseState is error!-${courseState.message}"
+                                    )
                                 }
                             }
                         }
@@ -150,11 +159,13 @@ class NearbyPlaceFragment : Fragment() {
                     btnSubmit.text = getString(R.string.plan_finish)
                     btnSubmit.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 }
+
                 0 -> {
                     btnSubmit.isSelected = false
                     btnSubmit.text = getString(R.string.plan_finish)
                     btnSubmit.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 }
+
                 -1 -> {
                     btnSubmit.isSelected = false
                     btnSubmit.text = getString(R.string.btn_max_error)
@@ -167,7 +178,6 @@ class NearbyPlaceFragment : Fragment() {
                 }
             }
         }
-
     }
 
     private fun getList(): List<ResponseNearbyPlaceDto.Data.Item> {
@@ -188,48 +198,64 @@ class NearbyPlaceFragment : Fragment() {
         return placeList
     }
 
-    private val placeDetailLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val itemJsonString = result.data?.getStringExtra("selectedItem")
-            val item = itemJsonString?.let {
-                try {
-                    Json.decodeFromString<ResponseNearbyPlaceDto.Data.Item>(it)
-                } catch (e: Exception) {
-                    Log.e("NearbyPlaceFragment", "JSON decoding error: ${e.message}")
-                    null
+    private val placeDetailLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val itemJsonString = result.data?.getStringExtra("selectedItem")
+                val item = itemJsonString?.let {
+                    try {
+                        Json.decodeFromString<ResponseNearbyPlaceDto.Data.Item>(it)
+                    } catch (e: Exception) {
+                        Log.e("NearbyPlaceFragment", "JSON decoding error: ${e.message}")
+                        null
+                    }
                 }
-            }
 
-            if (item != null) {
-                Log.d("NearbyPlaceFragment", "Item received: ${item.name}")
-                val isItemSelected = result.data?.getBooleanExtra("isItemSelected", false) ?: false
-                updateItemSelection(item, isItemSelected)
+                if (item != null) {
+                    Log.d("NearbyPlaceFragment", "Item received: ${item.name}")
+                    val isItemSelected =
+                        result.data?.getBooleanExtra("isItemSelected", false) ?: false
+                    updateItemSelection(item, isItemSelected)
+                } else {
+                    Log.e("NearbyPlaceFragment", "Item is null or failed to decode")
+                }
             } else {
-                Log.e("NearbyPlaceFragment", "Item is null or failed to decode")
+                Log.d("NearbyPlaceFragment", "Result not OK")
             }
-        } else {
-            Log.d("NearbyPlaceFragment", "Result not OK")
         }
-    }
 
     private fun updateItemSelection(item: ResponseNearbyPlaceDto.Data.Item, isSelected: Boolean) {
         // _selectPlace의 현재 값을 가져와서 수정 가능한 리스트로 변환
         nearbyViewModel.selectPlaceList.value?.let { list ->
-            Log.d("nearbyplacefragment","isSelected: ${isSelected}")
-            if(list.contains(item) && !isSelected || (!list.contains(item) && isSelected)) {
-                Log.d("nearbyplacefragment","item contain, delete it or not contain and add it")
-                nearbyViewModel.selectNearbyPlace(item)
-                Log.d("nearbyplacefragment","list: ${list}")
+            Log.d("nearbyplacefragment", "isSelected: ${isSelected}")
+            if (list.contains(item) && !isSelected || (!list.contains(item) && isSelected)) {
+                Log.d("nearbyplacefragment", "item contain, delete it or not contain and add it")
+                Log.d("nearbyplacefragment", "list: ${list}")
                 nearbyPlaceAdapter.updateSelection(item, isSelected)
+                selectButton(item)
             }
         } ?: run {
             Log.e("nearbyplacefragment", "selectPlaceList is null")
-            if(isSelected) {
-                Log.d("nearbyplacefragment","add item")
-                nearbyViewModel.selectNearbyPlace(item)
+            if (isSelected) {
+                Log.d("nearbyplacefragment", "add item")
                 nearbyPlaceAdapter.updateSelection(item, isSelected)
+                selectButton(item)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateAdapterSelectionFromViewModel()
+    }
+
+    private fun updateAdapterSelectionFromViewModel() {
+        val selectedList = nearbyViewModel.selectPlaceList.value ?: return
+        selectedList.forEach { item ->
+            nearbyPlaceAdapter.updateSelection(item, true)
+        }
+        binding.btnSubmit.isSelected=true
+        binding.btnSubmit.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
     }
 
     override fun onDestroyView() {
