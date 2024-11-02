@@ -6,7 +6,7 @@
         </shape>
     </item>
     <item
-        android:drawable="@drawable/ic_calendar_purple_17"
+        android:drawable="@drawable/ic_calendar_blue_17"
         android:gravity="center"
         android:start="50dp"
         android:end="150dp"

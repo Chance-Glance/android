@@ -68,8 +68,8 @@ class NearbyPlaceAdapter(private val context:Context,  private val clickButton: 
             constraintSet.applyTo(binding.btnSelect)
 
             // 색상 애니메이션 적용
-            val startColor = if (isSelected) context.getColor(R.color.plan_btn_purple) else context.getColor(R.color.white)
-            val endColor = if (isSelected) context.getColor(R.color.white) else context.getColor(R.color.plan_btn_purple)
+            val startColor = if (isSelected) context.getColor(R.color.plan_btn_blue) else context.getColor(R.color.white)
+            val endColor = if (isSelected) context.getColor(R.color.white) else context.getColor(R.color.plan_btn_blue)
 
             ObjectAnimator.ofObject(binding.ivSlider, "backgroundColor", ArgbEvaluator(), startColor, endColor)
                 .apply {
@@ -90,67 +90,6 @@ class NearbyPlaceAdapter(private val context:Context,  private val clickButton: 
             if(isOn) selectPlaceList.add(item)
             else selectPlaceList.remove(item)
         }
-
-        /*fun onBind(item:ResponseNearbyPlaceDto.Data.Item){
-            Log.d("ImageList", "imageUrlList size: ${item.imageUrlList.size}")
-            Log.d("ImageList", "First image URL: ${item.imageUrlList.getOrNull(0)}")
-
-            with(binding){
-                tvName.text=item.name
-                tvLocation.text=item.address
-                ivImage.load(item.imageUrlList.getOrNull(0) ?: R.drawable.cat) {
-                    transformations(RoundedCornersTransformation(30f)) // 30f로 모서리 둥글게
-                    error(R.drawable.cat) // 로드 실패 시 기본 이미지
-                }
-                //btnSelect.isSelected = selectPlaceList.contains(item) // 버튼의 상태를 selectedItems에 따라 결정
-
-                root.setOnClickListener{
-                    onItemClicked(item)
-                }
-                btnSelect.setOnClickListener{
-                    toggleButton(item)
-                    clickButton(item)
-                }
-            }
-        }
-
-        private fun toggleButton(item: ResponseNearbyPlaceDto.Data.Item) {
-            val constraintSet = ConstraintSet()
-            constraintSet.clone(binding.btnSelect) // btnSelect는 ConstraintLayout이어야 함
-
-            // isOn에 따라 슬라이더 위치 변경
-            val endBias = if (isOn) 0.2f else 0.8f
-            constraintSet.setHorizontalBias(R.id.iv_slider, endBias)
-
-            // 애니메이션 적용
-            val transition = ChangeBounds()
-            transition.duration = 300
-            TransitionManager.beginDelayedTransition(binding.btnSelect, transition)
-            constraintSet.applyTo(binding.btnSelect)
-
-            // 색상 애니메이션 적용
-            val startColor = if (isOn) context.getColor(R.color.white) else context.getColor(R.color.plan_btn_purple)
-            val endColor = if (isOn) context.getColor(R.color.plan_btn_purple) else context.getColor(R.color.white)
-
-            ObjectAnimator.ofObject(binding.ivSlider, "backgroundColor", ArgbEvaluator(), startColor, endColor)
-                .apply {
-                    duration = 300
-                    start()
-                }
-
-            // 배경 변경
-            val backgroundDrawable =
-                if (isOn) R.drawable.btn_background else R.drawable.btn_background_selected
-            binding.btnSelect.setBackgroundResource(backgroundDrawable)
-
-            isOn = !isOn
-
-            if(isOn) selectPlaceList.addAll(listOf(item))
-            else{
-                if(selectPlaceList.contains(item))
-                    selectPlaceList.remove(item)
-            }
-        }*/
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddPlaceViewHolder {

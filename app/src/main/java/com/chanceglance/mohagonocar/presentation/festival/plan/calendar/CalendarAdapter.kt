@@ -31,7 +31,7 @@ class CalendarAdapter(
                 // 축제 날짜 처리
                 if (isFestivalDate) {
                     dateButton.setBackgroundColor(
-                        ContextCompat.getColor(itemView.context, R.color.plan_btn_purple)
+                        ContextCompat.getColor(itemView.context, R.color.plan_btn_blue)
                     )
                     dateButton.setTextColor(
                         ContextCompat.getColor(itemView.context, R.color.white)
@@ -48,7 +48,7 @@ class CalendarAdapter(
                 // 선택된 버튼 처리
                 if (isSelected) {
                     dateButton.setBackgroundColor(
-                        ContextCompat.getColor(itemView.context, R.color.black)
+                        ContextCompat.getColor(itemView.context, R.color.plan_btn_selected_blue)
                     )
                     dateButton.setTextColor(
                         ContextCompat.getColor(itemView.context, R.color.white)

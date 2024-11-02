@@ -177,7 +177,6 @@ class PlanActivity : AppCompatActivity() {
         }
     }*/
 
-
     private fun showCourseText() {
         // BottomSheetBehavior 설정
         bottomSheetBehavior = BottomSheetBehavior.from(binding.fcvCourse)
@@ -188,94 +187,74 @@ class PlanActivity : AppCompatActivity() {
         // BottomSheet의 peek height를 250dp로 설정 (최소화면 높이)
         bottomSheetBehavior.peekHeight = (250 * resources.displayMetrics.density).toInt()
 
+        // BottomSheet의 숨김 모드 활성화
+        bottomSheetBehavior.isHideable = true // BottomSheet를 숨길 수 있도록 설정
+
         // BottomSheet의 상태 변화 이벤트 처리
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                // 상태 변화에 따른 처리
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         println("BottomSheet Expanded")
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         println("BottomSheet Collapsed")
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        println("BottomSheet Hidden")
                     }
                 }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 // slideOffset을 사용하지 않음, 최대화면과 최소화면 상태만 사용
-                // slideOffset은 자동으로 0~1 범위 내에서 상태를 전환
             }
         })
-
-        /*bottomSheetBehavior = BottomSheetBehavior.from(binding.fcvCourse)
-
-        // BottomSheet의 초기 상태를 Collapsed로 설정
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
-        // BottomSheet의 peek height를 400dp로 설정
-        bottomSheetBehavior.peekHeight = (250 * resources.displayMetrics.density).toInt()
-
-        // BottomSheet의 상태 변화 이벤트 처리
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                // 상태 변화에 따른 처리
-                when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        println("BottomSheet Expanded")
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        println("BottomSheet Collapsed")
-                    }
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                // slideOffset은 -1(숨김)부터 1(전체화면)까지 범위를 가짐
-                if (slideOffset > 0) { // 슬라이드가 중간 이상일 때만 반응
-                    val maxHeight = binding.root.height // 부모 뷰의 전체 높이
-                    val newHeight = (250 * resources.displayMetrics.density + slideOffset * (maxHeight - 400 * resources.displayMetrics.density)).toInt()
-
-                    // BottomSheet의 높이를 슬라이드 위치에 따라 조정
-                    bottomSheet.layoutParams.height = newHeight
-                    bottomSheet.requestLayout()
-                }
-            }
-        })*/
-        /*bottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                // 상태 변화에 따른 처리
-                when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        // 확장 상태
-                        println("BottomSheet Expanded")
-                    }
-
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        // 축소 상태
-                        println("BottomSheet Collapsed")
-                    }
-
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                        // 드래그 중
-                    }
-
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                        // 정착 중 (멈추기 직전)
-                    }
-
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        // 숨김 상태
-                    }
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                // 슬라이드 중일 때의 동작 처리 (예: 슬라이드된 퍼센트를 이용한 UI 변화)
-            }
-        })*/
     }
+
+    // BottomSheet를 다시 표시할 수 있도록 설정
+    fun showBottomSheet() {
+        // BottomSheet가 이미 보이는 상태라면 return
+        if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+            return
+        }
+
+        // BottomSheet가 숨겨진 상태일 때만 표시
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+
+
+    /* private fun showCourseText() {
+         // BottomSheetBehavior 설정
+         bottomSheetBehavior = BottomSheetBehavior.from(binding.fcvCourse)
+
+         // BottomSheet의 초기 상태를 Collapsed로 설정
+         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+         // BottomSheet의 peek height를 250dp로 설정 (최소화면 높이)
+         bottomSheetBehavior.peekHeight = (250 * resources.displayMetrics.density).toInt()
+
+         // BottomSheet의 상태 변화 이벤트 처리
+         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                 // 상태 변화에 따른 처리
+                 when (newState) {
+                     BottomSheetBehavior.STATE_EXPANDED -> {
+                         println("BottomSheet Expanded")
+                     }
+                     BottomSheetBehavior.STATE_COLLAPSED -> {
+                         println("BottomSheet Collapsed")
+                     }
+                 }
+             }
+
+             override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                 // slideOffset을 사용하지 않음, 최대화면과 최소화면 상태만 사용
+                 // slideOffset은 자동으로 0~1 범위 내에서 상태를 전환
+             }
+         })
+     }*/
 
     // fcvCourse의 visibility를 제어하는 메서드 추가
     fun deleteFcvCourse() {
@@ -283,9 +262,7 @@ class PlanActivity : AppCompatActivity() {
         binding.fcvCourse.visibility = View.GONE
     }
 
-    /*// Android의 기본 뒤로가기 동작 처리
-    override fun onBackPressed() {
-        super.onBackPressed()
-        handleBackPressed() // 기본 동작을 이 메서드로 대체
-    }*/
+    fun getTvNameText(): String {
+        return binding.tvName.text.toString()
+    }
 }

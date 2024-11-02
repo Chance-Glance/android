@@ -5,6 +5,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -40,6 +41,8 @@ class FestivalAdapter(private val onItemClicked: (ResponseFestivalDto.Data.Item)
 
                 // 이미지 요청 실행
                 binding.itemFestival.context.imageLoader.enqueue(request)
+            }else{
+                binding.itemFestival.background = ContextCompat.getDrawable(binding.itemFestival.context, R.drawable.cat)
             }
             binding.tvLocation.text=item.address
 
