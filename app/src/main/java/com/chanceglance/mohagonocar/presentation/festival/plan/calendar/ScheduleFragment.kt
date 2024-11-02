@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,6 +18,7 @@ import com.chanceglance.mohagonocar.presentation.festival.plan.PlanActivity
 import com.chanceglance.mohagonocar.presentation.festival.plan.PlanViewModel
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.time.LocalDate
 import java.util.Calendar
 
 class ScheduleFragment : Fragment() {
@@ -25,8 +27,9 @@ class ScheduleFragment : Fragment() {
         get() = requireNotNull(_binding) { "null" }
 
     private val planViewModel: PlanViewModel by activityViewModels()
+    private lateinit var calendarAdapter: CalendarAdapter
 
-    private var currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+    private var currentMonth = 9 //Calendar.getInstance().get(Calendar.MONTH)
     private var currentYear = Calendar.getInstance().get(Calendar.YEAR)
     private lateinit var selectedDay: String
 
@@ -81,7 +84,7 @@ class ScheduleFragment : Fragment() {
             if (binding.btnSubmit.isSelected) {
                 planViewModel.getDate(currentYear, currentMonth, selectedDay)
                 if (binding.btnSubmit.isSelected) {
-                    (activity as PlanActivity).replaceFragment(TimeFragment(), "PlaceFragment")
+                    (activity as PlanActivity).replaceFragment(TimeFragment(), "TimeFragment")
                 }
             } else {
                 // 선택되지 않았다면 알림을 주는 로직
@@ -111,7 +114,32 @@ class ScheduleFragment : Fragment() {
 
         // 달력 업데이트 (현재 달의 날짜 데이터 생성)
         val days = generateDaysForMonth(currentYear, currentMonth)
-        val adapter = CalendarAdapter(days, festivalDates) { selectedDay ->
+        calendarAdapter = CalendarAdapter(
+            days,
+            festivalDates = festivalDates,
+            onDateClick = { selectedDay ->
+                // 날짜 업데이트
+                planViewModel.getDate(currentYear, currentMonth, selectedDay)
+
+                // 축제 날짜인지 여부에 따라 버튼 상태 설정
+                if (festivalDates.contains(selectedDay)) {
+                    this.selectedDay = selectedDay
+                    with(binding) {
+                        btnSubmit.text = getString(R.string.plan_submit, currentYear, currentMonth + 1, selectedDay)
+                        btnSubmit.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                        btnSubmit.isSelected = true
+                    }
+                } else {
+                    with(binding) {
+                        btnSubmit.text = getString(R.string.plan_error)
+                        btnSubmit.setTextColor(ContextCompat.getColor(requireContext(), R.color.plan_error_red))
+                        btnSubmit.isSelected = false
+                    }
+                }
+            }
+        )
+
+        /*val adapter = CalendarAdapter(days, festivalDates) { selectedDay ->
             planViewModel.getDate(currentYear, currentMonth, selectedDay)
             if (festivalDates.contains(selectedDay)) {
                 this.selectedDay = selectedDay
@@ -129,9 +157,9 @@ class ScheduleFragment : Fragment() {
                 }
             }
         }
-
+*/
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 7)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = calendarAdapter
     }
 
 
@@ -158,6 +186,27 @@ class ScheduleFragment : Fragment() {
         }
 
         return days
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // ViewModel의 selectedDate를 어댑터에 설정하여 선택된 상태 유지
+        calendarAdapter.setSelectedDate(planViewModel.selectedDate.value)
+
+        // selectedDate가 null이 아닐 때 버튼 상태 업데이트
+        planViewModel.selectedDate.value?.let { date ->
+            currentYear = date.year
+            currentMonth = date.monthValue - 1 // monthValue는 1부터 시작하므로 -1 필요
+            selectedDay = date.dayOfMonth.toString()
+
+            // btnSubmit 상태 업데이트
+            with(binding) {
+                btnSubmit.text = getString(R.string.plan_submit, currentYear, currentMonth + 1, selectedDay)
+                btnSubmit.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                btnSubmit.isSelected = true
+            }
+        }
     }
 
 }

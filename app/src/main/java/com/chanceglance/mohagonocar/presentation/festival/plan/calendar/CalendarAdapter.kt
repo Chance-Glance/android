@@ -7,14 +7,16 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.chanceglance.mohagonocar.R
+import java.time.LocalDate
 
 class CalendarAdapter(
     private val days: List<String>,
     private val festivalDates: List<String>,
-    private val onDateClick: (String) -> Unit
+    private val onDateClick: (String) -> Unit,
 ) : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
 
     private var selectedPosition = RecyclerView.NO_POSITION // 선택된 버튼의 위치
+    private var selectedDate: LocalDate? = null // 선택된 날짜를 저장
 
     inner class CalendarViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val dateButton: Button = itemView.findViewById(R.id.buttonDate)
@@ -53,7 +55,7 @@ class CalendarAdapter(
                     )
                 }
 
-                // 클릭 이벤트 처리
+                // 클릭 이벤트 설정
                 dateButton.setOnClickListener {
                     val previousPosition = selectedPosition
                     selectedPosition = adapterPosition
@@ -77,9 +79,15 @@ class CalendarAdapter(
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val day = days[position]
         val isFestivalDate = festivalDates.contains(day)
-        val isSelected = position == selectedPosition
+        val isSelected = position == selectedPosition // 현재 위치가 선택된 위치인지 확인
         holder.bind(day, isFestivalDate, isSelected, onDateClick)
     }
 
     override fun getItemCount(): Int = days.size
+
+    fun setSelectedDate(date: LocalDate?) {
+        selectedDate = date
+        selectedPosition = days.indexOfFirst { it == date?.dayOfMonth.toString() }
+        notifyDataSetChanged() // 선택된 날짜가 변경될 때 전체 갱신
+    }
 }

@@ -4,14 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.ActivityPlanBinding
 import com.chanceglance.mohagonocar.presentation.festival.FestivalDetailFragment
 import com.chanceglance.mohagonocar.presentation.festival.plan.calendar.ScheduleFragment
+import com.chanceglance.mohagonocar.presentation.festival.plan.course.CourseWithFestivalFragment
 import com.chanceglance.mohagonocar.presentation.festival.plan.nearby.NearbyViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
@@ -77,36 +80,40 @@ class PlanActivity : AppCompatActivity() {
             val day = date.dayOfMonth
 
             // SimpleDateFormat을 사용하여 날짜 포맷 설정 (e.g., "11 Aug")
-            val formattedDate = formatDateToDayMonth(year, month, day)
+            val formattedDate = formatDateToDayMonth(year, month-1, day)
             binding.btnStart.text = formattedDate
             binding.btnEnd.text = formattedDate
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                handleBackPressed() // 기본 뒤로 가기 버튼 동작을 handleBackPressed로 대체
+            }
+        })
+
+
     }
 
     fun replaceFragment(fragment: Fragment, tag: String) {
         val transaction = supportFragmentManager.beginTransaction()
 
         // 현재 보이는 프래그먼트를 숨김
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fcv_plan)
+        /*val currentFragment = supportFragmentManager.findFragmentById(R.id.fcv_plan)
         if (currentFragment != null) {
             transaction.hide(currentFragment)
-        }
+        }*/
 
         // 새 프래그먼트를 보여줌, 없으면 추가
-        val fragmentInStack = supportFragmentManager.findFragmentByTag(tag)
-        if (fragmentInStack != null) {
-            transaction.show(fragmentInStack)
-        } else {
-            transaction.add(R.id.fcv_plan, fragment, tag)
-        }
-
-        transaction.addToBackStack(null)
+        transaction.replace(R.id.fcv_plan, fragment, tag)
+        transaction.addToBackStack(null) // 백스택에 추가
+        Log.d("planActivity", "replaceFragment - Fragment ${fragment.javaClass.simpleName} added to backstack")
         transaction.commit()
     }
 
     fun showCourseFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fcv_course, fragment) // replace로 변경
+            .addToBackStack("fcv_course_fragment") // 태그를 추가하여 백스택에 넣음
             .commit()
 
         binding.fcvCourse.visibility = View.VISIBLE
@@ -130,14 +137,45 @@ class PlanActivity : AppCompatActivity() {
     // 뒤로가기 버튼 눌렀을 때의 처리
     private fun handleBackPressed() {
         val fragmentManager = supportFragmentManager
+        Log.d("PlanActivity", "Current count: ${fragmentManager.backStackEntryCount}")
+
         if (fragmentManager.backStackEntryCount > 0) {
-            // 백스택에 프래그먼트가 있으면 이전 프래그먼트로 돌아감
+            // 백스택의 최상위 프래그먼트를 확인
+            val currentFragment = fragmentManager.findFragmentById(R.id.fcv_plan)
+            Log.d("PlanActivity", "Current fragment: ${currentFragment?.javaClass?.simpleName}")
+
+            if (currentFragment is CourseWithFestivalFragment) {
+                // 최상위 프래그먼트가 CourseWithFestivalFragment인 경우 deleteFcvCourse 호출
+                deleteFcvCourse()
+            }
+
+            // 이전 프래그먼트로 돌아감
             fragmentManager.popBackStack()
         } else {
             // 백스택이 비어 있으면 액티비티 종료
             finish()
         }
     }
+
+    /*private fun handleBackPressed() {
+        val fragmentManager = supportFragmentManager
+        if (fragmentManager.backStackEntryCount > 0) {
+            // 백스택에 프래그먼트가 있으면 이전 프래그먼트로 돌아감
+            // 백스택의 최상위 프래그먼트를 확인
+            val currentFragment = fragmentManager.findFragmentById(R.id.fcv_plan)
+
+            if (currentFragment is CourseWithFestivalFragment) {
+                // 최상위 프래그먼트가 CourseWithFestivalFragment인 경우 hideFcvCourse 호출
+                deleteFcvCourse()
+            }
+
+            // 이전 프래그먼트로 돌아감
+            fragmentManager.popBackStack()
+        } else {
+            // 백스택이 비어 있으면 액티비티 종료
+            finish()
+        }
+    }*/
 
 
     private fun showCourseText() {
@@ -240,13 +278,14 @@ class PlanActivity : AppCompatActivity() {
     }
 
     // fcvCourse의 visibility를 제어하는 메서드 추가
-    fun hideFcvCourse() {
+    fun deleteFcvCourse() {
+        supportFragmentManager.popBackStack("fcv_course_fragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
         binding.fcvCourse.visibility = View.GONE
     }
 
-    // Android의 기본 뒤로가기 동작 처리
+    /*// Android의 기본 뒤로가기 동작 처리
     override fun onBackPressed() {
         super.onBackPressed()
         handleBackPressed() // 기본 동작을 이 메서드로 대체
-    }
+    }*/
 }
