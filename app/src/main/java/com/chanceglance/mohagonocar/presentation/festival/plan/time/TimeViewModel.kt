@@ -1,5 +1,6 @@
 package com.chanceglance.mohagonocar.presentation.festival.plan.time
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,9 +16,11 @@ class TimeViewModel:ViewModel() {
 
     fun getDepart(decide:Boolean){
         _decideDepart.value=decide
+        Log.d("timeViewModel","depart is ${decide}")
     }
     fun getArrival(decide: Boolean){
         _decideArrival.value=decide
+        Log.d("timeViewModel","arrival is ${decide}")
     }
 
 
