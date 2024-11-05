@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
     android:background="@color/white">
 
@@ -15,98 +15,128 @@
             android:id="@+id/tv_itinerary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
             android:text="@string/plan_departure_arrival"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/sv_search_depart"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            android:focusable="true"
-            android:padding="5dp"
             android:layout_marginTop="25dp"
             android:layout_marginEnd="30dp"
             android:background="@drawable/sv_background"
+            android:focusable="true"
+            android:padding="5dp"
             app:iconifiedByDefault="false"
-            app:layout_constraintTop_toBottomOf="@id/tv_itinerary"
-            app:layout_constraintStart_toStartOf="@id/tv_itinerary"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_itinerary"
+            app:layout_constraintTop_toBottomOf="@id/tv_itinerary"
             app:queryHint="@string/plan_depart" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/sv_search_arrival"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            android:focusable="true"
-            android:padding="5dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/sv_background"
+            android:focusable="true"
+            android:padding="5dp"
             app:iconifiedByDefault="false"
-            app:layout_constraintTop_toBottomOf="@id/sv_search_depart"
-            app:layout_constraintStart_toStartOf="@id/sv_search_depart"
             app:layout_constraintEnd_toEndOf="@id/sv_search_depart"
+            app:layout_constraintStart_toStartOf="@id/sv_search_depart"
+            app:layout_constraintTop_toBottomOf="@id/sv_search_depart"
             app:queryHint="@string/plan_arrival" />
+
+        <!--<androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcv_search_depart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/sv_search_depart"
+            app:layout_constraintStart_toStartOf="@id/sv_search_depart"
+            app:layout_constraintTop_toBottomOf="@id/sv_search_depart" />-->
 
         <TextView
             android:id="@+id/tv_depart_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
             android:text="@string/plan_depart_time"
             android:textColor="@color/plan_text_grey"
-            android:layout_marginTop="60dp"
-            app:layout_constraintTop_toBottomOf="@id/sv_search_arrival"
-            app:layout_constraintStart_toStartOf="@id/sv_search_arrival"/>
+            app:layout_constraintStart_toStartOf="@id/sv_search_arrival"
+            app:layout_constraintTop_toBottomOf="@id/sv_search_arrival" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_depart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="30dp"
+            android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/tv_depart_time"
-            app:layout_constraintStart_toStartOf="@id/sv_search_depart"
             app:layout_constraintEnd_toEndOf="@id/sv_search_arrival"
-            tools:listitem="@layout/item_time"/>
+            app:layout_constraintStart_toStartOf="@id/sv_search_depart"
+            app:layout_constraintTop_toBottomOf="@id/tv_depart_time"
+            tools:listitem="@layout/item_time" />
 
         <TextView
             android:id="@+id/tv_arrival_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             android:text="@string/plan_arrival_time"
             android:textColor="@color/plan_text_grey"
-            android:layout_marginTop="50dp"
-            app:layout_constraintTop_toBottomOf="@id/rv_depart"
-            app:layout_constraintStart_toStartOf="@id/sv_search_arrival"/>
+            app:layout_constraintStart_toStartOf="@id/sv_search_arrival"
+            app:layout_constraintTop_toBottomOf="@id/rv_depart" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_arrival"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="30dp"
+            android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/tv_arrival_time"
-            app:layout_constraintStart_toStartOf="@id/sv_search_depart"
             app:layout_constraintEnd_toEndOf="@id/sv_search_arrival"
-            tools:listitem="@layout/item_time"/>
+            app:layout_constraintStart_toStartOf="@id/sv_search_depart"
+            app:layout_constraintTop_toBottomOf="@id/tv_arrival_time"
+            tools:listitem="@layout/item_time" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_next"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_next"
             android:text="@string/plan_place_submit"
-            app:layout_constraintTop_toBottomOf="@id/rv_arrival"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/rv_arrival" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search_depart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/sv_search_depart"
+            app:layout_constraintStart_toStartOf="@id/sv_search_depart"
+            app:layout_constraintEnd_toEndOf="@id/sv_search_depart"
+            tools:listitem="@layout/item_search"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search_arrival"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/sv_search_arrival"
+            app:layout_constraintStart_toStartOf="@id/sv_search_arrival"
+            app:layout_constraintEnd_toEndOf="@id/sv_search_arrival"
+            tools:listitem="@layout/item_search"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

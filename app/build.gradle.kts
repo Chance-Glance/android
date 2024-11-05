@@ -39,6 +39,12 @@ android {
             "NATIVE_APP_KEY",
             gradleLocalProperties(rootDir, providers).getProperty("kakao.native.app.key")
         )
+
+        buildConfigField(
+            "String",
+            "KAKAO_REST_API",
+            gradleLocalProperties(rootDir, providers).getProperty("kakao.rest.api.key")
+        )
     }
 
     buildTypes {

@@ -17,6 +17,7 @@
     <string name="plan_departure_arrival">출발 도착 지정</string>
     <string name="plan_depart">출발지 지정</string>
     <string name="plan_arrival">도착지 지정</string>
+    <string name="plan_search_name">축제명</string>
     <string name="plan_depart_time">출발 예정 시각</string>
     <string name="plan_arrival_time">도착 예정 시각</string>
     <string name="plan_place_submit">여행 코스 설계 시작</string>
