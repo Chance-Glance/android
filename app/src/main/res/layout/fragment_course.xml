@@ -7,15 +7,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_festivals"
+        android:id="@+id/rv_course"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:spanCount="2"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:layout_height="0dp"
+        android:layout_marginBottom="50dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/item_festival"/>
+        tools:listitem="@layout/item_course"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,8 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.Log
@@ -12,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import coil.load
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.data.responseDto.ResponseNearbyPlaceDto
@@ -61,6 +64,12 @@ class PlaceDetailActivity : AppCompatActivity() {
             tvLocation.text = item.address
             tvDistinguish.text = item.placeType
 
+            if(item.placeType=="RESTAURANT")
+                ivType.load(R.drawable.ic_restaurant_blue_24)
+            else{
+                ivType.load(R.drawable.ic_attraction_blue_24)
+            }
+
             imagesAdapter.getImageList(item.imageUrlList)
             vpImages.adapter = imagesAdapter
             tlDots.setupWithViewPager(binding.vpImages, true)
@@ -69,7 +78,10 @@ class PlaceDetailActivity : AppCompatActivity() {
                 toggleButton()
             }
             btnBack.setOnClickListener {
-                finish()
+                Handler(Looper.getMainLooper()).post {
+                    finish()
+                    overridePendingTransition(R.anim.stay, R.anim.slide_out_right)
+                }
             }
         }
 
@@ -141,7 +153,11 @@ class PlaceDetailActivity : AppCompatActivity() {
         setResult(RESULT_OK, intent)
 
         Log.d("PlaceDetailActivity", "Item sent: ${place.name}") // 디버그용 로그 추가
-        super.onBackPressed()
+
+        Handler(Looper.getMainLooper()).post {
+            finish()
+            overridePendingTransition(R.anim.stay, R.anim.slide_out_right)
+        }
     }
 
 }

@@ -16,7 +16,7 @@
         android:textStyle="bold"
         android:textColor="@color/white"
         android:layout_marginBottom="5dp"
-        app:layout_constraintStart_toStartOf="@id/tv_location"
+        app:layout_constraintStart_toStartOf="@id/tv_date"
         app:layout_constraintBottom_toTopOf="@id/tv_date"/>
 
     <TextView
@@ -25,11 +25,12 @@
         android:layout_height="wrap_content"
         android:text="@string/festival_date"
         android:textColor="@color/white"
-        android:layout_marginBottom="3dp"
-        app:layout_constraintStart_toStartOf="@id/tv_location"
-        app:layout_constraintBottom_toTopOf="@id/tv_location"/>
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/tv_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,6 +39,6 @@
         android:layout_marginStart="10dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
