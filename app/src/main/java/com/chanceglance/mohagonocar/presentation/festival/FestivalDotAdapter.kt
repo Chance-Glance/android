@@ -73,13 +73,13 @@ class FestivalDotAdapter(var context:Context):PagerAdapter() {
 
         if (imageList.isEmpty()) {
             // 이미지 리스트가 비어 있으면 기본 이미지를 로드
-            binding.ivImage.setImageResource(R.drawable.cat)
+            binding.ivImage.setImageResource(R.drawable.logo_long)
             Log.e("festivalDotAdapter", "Image list is empty, setting default image")
         } else {
             // imageList에서 position에 해당하는 이미지를 불러와 설정
             val imageUrl = imageList[position % imageList.size] // 이미지를 순환해서 사용
             binding.ivImage.load(imageUrl) {
-                placeholder(R.drawable.cat) // 로딩 중일 때 플레이스홀더 이미지
+                placeholder(R.drawable.logo_long) // 로딩 중일 때 플레이스홀더 이미지
                 error(R.drawable.error) // 오류가 발생할 경우 이미지
             }
         }
