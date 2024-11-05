@@ -113,6 +113,9 @@ dependencies {
 
     //shimmer
     implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+    //shapable
+    implementation ("com.google.android.material:material:1.11.0")
 }
 
 kapt {

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/plan_background_grey">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/tv_name"
@@ -12,7 +12,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:text="@string/festival_name"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
         android:text="@string/festival_location"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:gravity="start"
         android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="@id/tv_name"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="@string/festival_date"
-        android:textSize="15sp"
+        android:textSize="13sp"
         app:layout_constraintStart_toStartOf="@id/tv_name"
         app:layout_constraintTop_toBottomOf="@id/tv_location" />
 

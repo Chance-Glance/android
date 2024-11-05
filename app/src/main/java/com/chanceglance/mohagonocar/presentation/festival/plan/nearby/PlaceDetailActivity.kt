@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import coil.load
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.data.responseDto.ResponseNearbyPlaceDto
@@ -60,6 +61,12 @@ class PlaceDetailActivity : AppCompatActivity() {
             tvName.text = item!!.name
             tvLocation.text = item.address
             tvDistinguish.text = item.placeType
+
+            if(item.placeType=="RESTAURANT")
+                ivType.load(R.drawable.ic_restaurant_blue_24)
+            else{
+                ivType.load(R.drawable.ic_attraction_blue_24)
+            }
 
             imagesAdapter.getImageList(item.imageUrlList)
             vpImages.adapter = imagesAdapter

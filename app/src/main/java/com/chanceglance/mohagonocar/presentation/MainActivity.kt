@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.databinding.ActivityMainBinding
+import com.chanceglance.mohagonocar.presentation.course.CourseFragment
 import com.chanceglance.mohagonocar.presentation.festival.FestivalFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -58,6 +59,8 @@ class MainActivity : AppCompatActivity() {
             btnFestival.setTextColor(Color.BLACK)
             btnTravel.setTextColor(Color.WHITE)
         }
+
+        replaceFragment(CourseFragment())
     }
 
     private fun replaceFragment(fragment: Fragment){

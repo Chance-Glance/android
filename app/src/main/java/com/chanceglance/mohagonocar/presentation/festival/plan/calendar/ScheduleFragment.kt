@@ -124,6 +124,7 @@ class ScheduleFragment : Fragment() {
                 // 축제 날짜인지 여부에 따라 버튼 상태 설정
                 if (festivalDates.contains(selectedDay)) {
                     this.selectedDay = selectedDay
+                    binding.btnSubmit.visibility=View.VISIBLE
                     with(binding) {
                         btnSubmit.text = getString(R.string.plan_submit, currentYear, currentMonth + 1, selectedDay)
                         btnSubmit.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))

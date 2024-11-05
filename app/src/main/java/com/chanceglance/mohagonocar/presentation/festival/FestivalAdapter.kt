@@ -42,9 +42,20 @@ class FestivalAdapter(private val onItemClicked: (ResponseFestivalDto.Data.Item)
                 // 이미지 요청 실행
                 binding.itemFestival.context.imageLoader.enqueue(request)
             }else{
-                binding.itemFestival.background = ContextCompat.getDrawable(binding.itemFestival.context, R.drawable.cat)
+                // 기본 이미지를 로드하면서 RoundedCornersTransformation과 ColorFilter를 적용
+                val request = ImageRequest.Builder(binding.itemFestival.context)
+                    .data(R.drawable.logo) // 기본 이미지 리소스
+                    .transformations(RoundedCornersTransformation(150f)) // 모서리 반경 150으로 설정
+                    .target { drawable ->
+                        drawable.colorFilter = PorterDuffColorFilter(Color.argb(100, 0, 0, 0), PorterDuff.Mode.SRC_ATOP)
+                        binding.itemFestival.background = drawable
+                    }
+                    .build()
+
+                // 이미지 요청 실행
+                binding.itemFestival.context.imageLoader.enqueue(request)
             }
-            binding.tvLocation.text=item.address
+            //binding.tvLocation.text=item.address
 
             val startDate = item.activePeriod.startDate.toString()
             val endDate = item.activePeriod.endDate.toString()
