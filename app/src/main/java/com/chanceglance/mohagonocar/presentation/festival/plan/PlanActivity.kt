@@ -2,6 +2,8 @@ package com.chanceglance.mohagonocar.presentation.festival.plan
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -73,6 +75,12 @@ class PlanActivity : AppCompatActivity() {
             handleBackPressed()
         }
 
+        //홈버튼 설정
+        binding.btnHome.setOnClickListener{
+            finish()
+            overridePendingTransition(R.anim.stay, R.anim.slide_out_right)
+        }
+
         planViewModel.selectedDate.observe(this) { date ->
             // LocalDate의 year, month, dayOfMonth를 사용
             val year = date.year
@@ -102,6 +110,12 @@ class PlanActivity : AppCompatActivity() {
         if (currentFragment != null) {
             transaction.hide(currentFragment)
         }*/
+
+        // 새 프래그먼트에만 슬라이드 인 애니메이션 적용, 기존 프래그먼트는 정지
+        /*transaction.setCustomAnimations(
+            R.anim.slide_in_right, // 새 프래그먼트가 나타날 때 애니메이션
+            R.anim.stay            // 기존 프래그먼트는 그대로 유지
+        )*/
 
         // 새 프래그먼트를 보여줌, 없으면 추가
         transaction.replace(R.id.fcv_plan, fragment)
@@ -148,12 +162,22 @@ class PlanActivity : AppCompatActivity() {
                 // 최상위 프래그먼트가 CourseWithFestivalFragment인 경우 deleteFcvCourse 호출
                 deleteFcvCourse()
             }
+            // 애니메이션 설정: 현재 프래그먼트가 오른쪽으로 슬라이드 아웃되면서 사라지게 설정
+            val transaction = fragmentManager.beginTransaction()
+            transaction.setCustomAnimations(
+                R.anim.stay,              // 이전 프래그먼트는 고정
+                R.anim.slide_out_right    // 현재 프래그먼트가 오른쪽으로 슬라이드 아웃
+            )
+            transaction.commit() // 트랜잭션 커밋으로 애니메이션 적용
 
             // 이전 프래그먼트로 돌아감
-            fragmentManager.popBackStack()
+            fragmentManager.popBackStackImmediate()
         } else {
             // 백스택이 비어 있으면 액티비티 종료
-            finish()
+            Handler(Looper.getMainLooper()).post {
+                finish()
+                overridePendingTransition(R.anim.stay, R.anim.slide_out_right)
+            }
         }
     }
 

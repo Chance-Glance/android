@@ -5,6 +5,8 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.util.Log
@@ -69,7 +71,10 @@ class PlaceDetailActivity : AppCompatActivity() {
                 toggleButton()
             }
             btnBack.setOnClickListener {
-                finish()
+                Handler(Looper.getMainLooper()).post {
+                    finish()
+                    overridePendingTransition(R.anim.stay, R.anim.slide_out_right)
+                }
             }
         }
 
@@ -141,7 +146,11 @@ class PlaceDetailActivity : AppCompatActivity() {
         setResult(RESULT_OK, intent)
 
         Log.d("PlaceDetailActivity", "Item sent: ${place.name}") // 디버그용 로그 추가
-        super.onBackPressed()
+
+        Handler(Looper.getMainLooper()).post {
+            finish()
+            overridePendingTransition(R.anim.stay, R.anim.slide_out_right)
+        }
     }
 
 }

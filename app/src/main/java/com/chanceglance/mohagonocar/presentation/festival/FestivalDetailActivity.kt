@@ -54,6 +54,7 @@ class FestivalDetailActivity : AppCompatActivity() {
     private fun clickBackButton() {
         binding.btnBack.setOnClickListener {
             finish()
+            overridePendingTransition(R.anim.stay, R.anim.slide_out_right)
         }
     }
 
@@ -62,6 +63,13 @@ class FestivalDetailActivity : AppCompatActivity() {
             val intent = Intent(this, PlanActivity::class.java)
             intent.putExtra("festival",itemJsonString)
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        // 왼쪽에서 오른쪽으로 슬라이드 애니메이션 설정
+        overridePendingTransition(R.anim.stay, R.anim.slide_out_right)
     }
 }

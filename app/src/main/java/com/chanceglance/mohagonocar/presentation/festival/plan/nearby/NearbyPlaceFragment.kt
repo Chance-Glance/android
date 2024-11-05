@@ -81,6 +81,7 @@ class NearbyPlaceFragment : Fragment() {
                                     intent.putExtra("isSelect", nearbyViewModel.isSelect(item))
                                     //intent.putExtra("selectList",list)
                                     placeDetailLauncher.launch(intent)
+                                    requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.stay)
                                 })
 
                             nearbyPlaceAdapter.getList(nearbyPlaceState.data.data.items)
