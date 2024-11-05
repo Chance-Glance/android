@@ -12,9 +12,13 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
 import retrofit2.Converter
+import retrofit2.Converter.Factory
 import retrofit2.Retrofit
 import timber.log.Timber
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -52,12 +56,30 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideAuthRetrofit(
+    @BaseUrlRetrofit
+    fun provideBaseRetrofit(
         jsonConverter: Converter.Factory,
         client: OkHttpClient,
     ): Retrofit {
-        return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(jsonConverter).client(client).build()
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(jsonConverter)
+            .client(client)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @KakaoMapRetrofit
+    fun provideKakaoMapRetrofit(
+        jsonConverter: Factory,
+        client: OkHttpClient,
+    ):Retrofit{
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.KAKAO_MAP_URL)
+            .addConverterFactory(jsonConverter)
+            .client(client)
+            .build()
     }
 
     @Provides
@@ -70,3 +92,10 @@ object RetrofitModule {
 fun String?.isJsonObject(): Boolean = this?.startsWith("{") == true && this.endsWith("}")
 fun String?.isJsonArray(): Boolean = this?.startsWith("[") == true && this.endsWith("]")
 
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+annotation class BaseUrlRetrofit
+
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+annotation class KakaoMapRetrofit
