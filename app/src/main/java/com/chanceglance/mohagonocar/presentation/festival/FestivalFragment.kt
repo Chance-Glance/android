@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.chanceglance.mohagonocar.R
 import com.chanceglance.mohagonocar.data.responseDto.ResponseFestivalDto
 import com.chanceglance.mohagonocar.databinding.FragmentFestivalBinding
 import com.chanceglance.mohagonocar.extension.FestivalState
@@ -53,7 +54,9 @@ class FestivalFragment: Fragment() {
 
                             val intent = Intent(requireContext(), FestivalDetailActivity::class.java)
                             intent.putExtra("festivalItem", jsonString) // 클릭된 아이템 정보 전달
-                            startActivity(intent)}
+                            startActivity(intent)
+                            requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.stay)}
+
                         festivalAdapter.getList(festivalState.data.data.items)
                         binding.rvFestivals.adapter=festivalAdapter
                     }
